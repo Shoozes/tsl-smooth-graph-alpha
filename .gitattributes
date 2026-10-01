@@ -1,0 +1,2 @@
+# Preserve exact reviewed source bytes across Git imports and checkouts.
+* -text

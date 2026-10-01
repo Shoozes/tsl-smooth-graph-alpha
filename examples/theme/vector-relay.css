@@ -1,0 +1,57 @@
+/*
+ * Vector Relay 1.1.0 example adapter.
+
+ * Example routes own their layouts; this file is their shared semantic palette.
+ */
+:where([data-ui-theme="vector-relay"]) {
+  --vr-bg: #0d0b12;
+  --vr-surface: #15121c;
+  --vr-surface-raised: #1d1926;
+  --vr-surface-soft: #24202d;
+  --vr-border: #51475f;
+  --vr-border-strong: #766a86;
+  --vr-text: #f3eff8;
+  --vr-text-muted: #bcb3c8;
+  --vr-text-support: #d4ccdf;
+  --vr-teal: #55e6d4;
+  --vr-teal-strong: #14b8a6;
+  --vr-violet: #b995ff;
+  --vr-warning: #ffd166;
+  --vr-danger: #ff758f;
+  --vr-success: #79e2a7;
+  --vr-focus: #9af4e8;
+  --vr-sans: Inter, "Segoe UI Variable", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --vr-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  color-scheme: dark;
+  accent-color: var(--vr-teal);
+}
+
+:where([data-ui-theme="vector-relay"], [data-ui-theme="vector-relay"] *) {
+  scrollbar-color: rgb(85 230 212 / 58%) transparent;
+  scrollbar-width: thin;
+}
+
+:where([data-ui-theme="vector-relay"]) ::selection {
+  color: #07110f;
+  background: var(--vr-teal);
+}
+
+@media (forced-colors: active) {
+  :where([data-ui-theme="vector-relay"]) {
+    --vr-bg: Canvas;
+    --vr-surface: Canvas;
+    --vr-surface-raised: Canvas;
+    --vr-surface-soft: Canvas;
+    --vr-border: CanvasText;
+    --vr-border-strong: CanvasText;
+    --vr-text: CanvasText;
+    --vr-text-muted: CanvasText;
+    --vr-text-support: CanvasText;
+    --vr-teal: LinkText;
+    --vr-violet: Highlight;
+    --vr-warning: CanvasText;
+    --vr-danger: CanvasText;
+    --vr-success: CanvasText;
+    --vr-focus: Highlight;
+  }
+}

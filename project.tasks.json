@@ -1,0 +1,124 @@
+{
+  "schema": "gknome_task_registry_v1",
+  "project": "ForceGraph TSL",
+  "description": "Run the examples and verify the reusable graph library.",
+  "tasks": [
+    {
+      "id": "forcegraph.showcase",
+      "alias": "run",
+      "label": "Run the showcase",
+      "description": "Build and start the local synthetic graph examples.",
+      "spec": {
+        "kind": "process",
+        "program": "pnpm.cmd",
+        "args": [
+          "run",
+          "showcase"
+        ],
+        "working_directory": "."
+      }
+    },
+    {
+      "id": "forcegraph.check",
+      "alias": "test",
+      "label": "Check the project",
+      "description": "Build, type-check, and run the public graph and example tests.",
+      "spec": {
+        "kind": "check",
+        "program": "pnpm.cmd",
+        "args": [
+          "run",
+          "check"
+        ],
+        "working_directory": ".",
+        "timeout_ms": 180000,
+        "max_output_bytes": 1048576
+      }
+    },
+    {
+      "id": "forcegraph.setup",
+      "alias": "setup",
+      "label": "Install locked dependencies",
+      "description": "Explicit setup: download the dependencies using the pinned pnpm lockfile.",
+      "explicit_setup": true,
+      "spec": {
+        "kind": "process",
+        "program": "pnpm.cmd",
+        "args": [
+          "install",
+          "--frozen-lockfile",
+          "--ignore-scripts"
+        ],
+        "working_directory": ".",
+        "timeout_ms": 600000,
+        "max_output_bytes": 1048576
+      }
+    },
+    {
+      "id": "forcegraph.build",
+      "alias": "build",
+      "label": "Build the library",
+      "description": "Build ESM JavaScript and declarations into ignored dist output.",
+      "spec": {
+        "kind": "check",
+        "program": "pnpm.cmd",
+        "args": [
+          "run",
+          "build"
+        ],
+        "working_directory": ".",
+        "timeout_ms": 180000,
+        "max_output_bytes": 1048576
+      }
+    },
+    {
+      "id": "forcegraph.headless",
+      "alias": "headless",
+      "label": "Run the headless example",
+      "description": "Build and run the seeded DOM-free package example.",
+      "spec": {
+        "kind": "sequence",
+        "tasks": [
+          {
+            "kind": "check",
+            "program": "pnpm.cmd",
+            "args": [
+              "run",
+              "build"
+            ],
+            "working_directory": ".",
+            "timeout_ms": 180000,
+            "max_output_bytes": 1048576
+          },
+          {
+            "kind": "process",
+            "program": "node.exe",
+            "args": [
+              "examples/headless.mjs"
+            ],
+            "working_directory": ".",
+            "timeout_ms": 10000,
+            "max_output_bytes": 65536
+          }
+        ]
+      }
+    },
+    {
+      "id": "forcegraph.typecheck",
+      "alias": "typecheck",
+      "label": "Check types",
+      "description": "Check source types without generating build output.",
+      "spec": {
+        "kind": "check",
+        "program": "pnpm.cmd",
+        "args": [
+          "run",
+          "typecheck"
+        ],
+        "working_directory": ".",
+        "timeout_ms": 180000,
+        "max_output_bytes": 1048576
+      }
+    }
+  ]
+}

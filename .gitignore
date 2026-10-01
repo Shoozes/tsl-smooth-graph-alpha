@@ -1,0 +1,30 @@
+# Explicit dependency/runtime setup
+node_modules/
+.pnpm-store/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+*.token
+*.secret
+.npmrc
+
+# Rebuildable output
+dist/
+.artifacts/
+release/
+coverage/
+test-results/
+playwright-report/
+*.log
+
+# Editor and operating system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*~

@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "declarationMap": false,
+    "outDir": ".artifacts/test-dist",
+    "rootDir": "."
+  },
+  "include": ["source/**/*.ts", "tests/product/**/*.ts"],
+  "exclude": ["dist", "node_modules", ".artifacts"]
+}

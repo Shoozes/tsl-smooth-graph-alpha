@@ -1,0 +1,37 @@
+{
+  "packageExports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./core": { "types": "./dist/core/index.d.ts", "import": "./dist/core/index.js" },
+    "./three": { "types": "./dist/platform/three/index.d.ts", "import": "./dist/platform/three/index.js" },
+    "./layout": { "types": "./dist/layout/index.d.ts", "import": "./dist/layout/index.js" },
+    "./labels": { "types": "./dist/labels/index.d.ts", "import": "./dist/labels/index.js" },
+    "./camera": { "types": "./dist/camera/index.d.ts", "import": "./dist/camera/index.js" },
+    "./worker": { "types": "./dist/worker/index.d.ts", "import": "./dist/worker/index.js" },
+    "./headless": { "types": "./dist/headless/index.d.ts", "import": "./dist/headless/index.js" }
+  },
+  "runtimeExports": {
+    ".": ["GraphError", "InvalidationReason", "NodeFlags", "createForceGraph", "createForceGraph3D", "createThreePlatform"],
+    "./core": ["GraphController", "GraphError", "InvalidationReason", "NodeFlags"],
+    "./three": ["createThreePlatform"],
+    "./layout": ["BarnesHutOctree", "DEFAULT_LAYOUT_CONFIGURATION", "DeterministicForceLayout", "MinimumDistanceIndex", "resolveLayoutConfiguration"],
+    "./labels": ["planLabelVisibility"],
+    "./camera": ["planPerspectiveCameraFocus", "planPerspectiveCameraFrame", "sampleCameraPoseTween"],
+    "./worker": ["createForceGraphLayoutWorker", "forceGraphLayoutWorkerUrl"],
+    "./headless": ["GraphError", "HeadlessForceGraph", "createHeadlessForceGraph"]
+  },
+  "declarationExports": {
+    ".": ["BackendChangeEvent", "CameraPose", "CreateThreePlatformOptions", "DeviceLostEvent", "EmbeddedHostOptions", "ForceGraph", "ForceGraphOptions", "FrameLoopMode", "GpuIdPickRequest", "GraphBounds", "GraphData", "GraphDataChange", "GraphDiagnostics", "GraphError", "GraphErrorCode", "GraphErrorEvent", "GraphErrorLike", "GraphEventListener", "GraphEventMap", "GraphEventName", "GraphHostOptions", "GraphId", "GraphLink", "GraphMutationKind", "GraphMutationResult", "GraphNode", "GraphNodeHandle", "GraphNodeInput", "GraphNodePatch", "GraphObserverErrorEvent", "GraphObserverErrorListener", "GraphPatch", "GraphReadView", "GraphSnapshot", "GraphStartupReport", "GraphStartupWarning", "GraphStartupWarningCode", "HeadlessHostOptions", "InteractionOptions", "InvalidationReason", "LayoutBackend", "LayoutConfiguration", "LayoutFailedEvent", "LayoutFailurePolicy", "LayoutInput", "LayoutSeparationDiagnostics", "LayoutSnapshot", "LayoutSettledEvent", "LegacyGraphSnapshot", "LinkFlowNodeReactionOptions", "LinkFlowOptions", "LinkStyleOptions", "ManagedHostOptions", "NodeClickEvent", "NodeDragEvent", "NodeFlags", "NodeHoverEvent", "NodeSelectionEffectOptions", "NodeStateAppearance", "NodeStateTheme", "NodeStyleOptions", "NodeSurfaceOptions", "RendererBackend", "RendererBackendPolicy", "RendererOptions", "RendererPickingOptions", "SelectionChangeEvent", "StyleValue", "ThreePlatform", "ValidationMode", "ValidationOptions", "Vec3", "WorkerLike", "createForceGraph", "createForceGraph3D", "createThreePlatform"],
+    "./core": ["BackendChangeEvent", "CameraPose", "DeviceLostEvent", "EmbeddedHostOptions", "ForceGraph", "ForceGraphOptions", "FrameLoopMode", "GpuIdPickRequest", "GraphBounds", "GraphData", "GraphDataChange", "GraphDiagnostics", "GraphError", "GraphErrorCode", "GraphErrorEvent", "GraphErrorLike", "GraphEventListener", "GraphEventMap", "GraphEventName", "GraphHostOptions", "GraphId", "GraphLink", "GraphMutationKind", "GraphMutationResult", "GraphNode", "GraphNodeHandle", "GraphNodeInput", "GraphNodePatch", "GraphObserverErrorEvent", "GraphObserverErrorListener", "GraphPatch", "GraphReadView", "GraphSnapshot", "GraphStartupReport", "GraphStartupWarning", "GraphStartupWarningCode", "HeadlessHostOptions", "InteractionOptions", "InvalidationReason", "LayoutBackend", "LayoutConfiguration", "LayoutFailedEvent", "LayoutFailurePolicy", "LayoutInput", "LayoutSeparationDiagnostics", "LayoutSnapshot", "LayoutSettledEvent", "LegacyGraphSnapshot", "LinkFlowNodeReactionOptions", "LinkFlowOptions", "LinkStyleOptions", "ManagedHostOptions", "NodeClickEvent", "NodeDragEvent", "NodeFlags", "NodeHoverEvent", "NodeSelectionEffectOptions", "NodeStateAppearance", "NodeStateTheme", "NodeStyleOptions", "NodeSurfaceOptions", "RendererBackend", "RendererBackendPolicy", "RendererOptions", "RendererPickingOptions", "SelectionChangeEvent", "StyleValue", "ValidationMode", "ValidationOptions", "Vec3", "WorkerLike", "GraphController"],
+    "./three": ["CreateThreePlatformOptions", "ThreePlatform", "createThreePlatform"],
+    "./layout": ["BarnesHutOctree", "DEFAULT_LAYOUT_CONFIGURATION", "DeterministicForceLayout", "MinimumDistanceIndex", "ResolvedLayoutConfiguration", "resolveLayoutConfiguration"],
+    "./labels": ["LabelCandidate", "LabelScreenRect", "LabelVisibilityDecision", "LabelVisibilityOptions", "LabelVisibilityReason", "planLabelVisibility"],
+    "./camera": ["CameraPoseTweenOptions", "CameraPoseTweenSample", "CameraTweenEasing", "CameraTweenPath", "PerspectiveCameraFocusOptions", "PerspectiveCameraFrame", "PerspectiveCameraFrameOptions", "planPerspectiveCameraFocus", "planPerspectiveCameraFrame", "sampleCameraPoseTween"],
+    "./worker": ["LayoutWorkerCommand", "LayoutWorkerMessage", "LayoutWorkerOperation", "createForceGraphLayoutWorker", "forceGraphLayoutWorkerUrl"],
+    "./headless": ["GraphError", "HeadlessForceGraph", "HeadlessGraphBounds", "HeadlessGraphData", "HeadlessGraphErrorLike", "HeadlessGraphId", "HeadlessGraphOptions", "HeadlessGraphPatch", "HeadlessGraphReadView", "HeadlessGraphSnapshot", "HeadlessLayoutOptions", "HeadlessLayoutResult", "HeadlessLayoutSnapshot", "HeadlessLink", "HeadlessMutationResult", "HeadlessNodeInput", "HeadlessNodePatch", "HeadlessSeparationDiagnostics", "HeadlessVec3", "LegacyHeadlessGraphSnapshot", "createHeadlessForceGraph"]
+  },
+  "signatures": [
+    { "file": "dist/index.d.ts", "text": "export declare function createForceGraph3D<TNode = unknown, TLink = unknown>(options?: ForceGraphOptions<TNode, TLink>): Promise<ForceGraph<TNode, TLink>>;" },
+    { "file": "dist/core/types.d.ts", "text": "export interface ForceGraph<TNode = unknown, TLink = unknown> {" },
+    { "file": "dist/headless/index.d.ts", "text": "export declare function createHeadlessForceGraph<TNode = unknown, TLink = unknown>(options?: HeadlessGraphOptions): HeadlessForceGraph<TNode, TLink>;" }
+  ]
+}

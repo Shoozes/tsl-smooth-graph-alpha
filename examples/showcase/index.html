@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Interactive local showcase for @ours/forcegraph-tsl.">
+    <link rel="icon" href="data:,">
+    <title>ForceGraph TSL showcase</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "../vendor/three.module.js",
+          "three/tsl": "../vendor/three.tsl.js",
+          "three/webgpu": "../vendor/three.webgpu.js"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="./showcase.css">
+  </head>
+  <body data-ui-theme="vector-relay">
+    <main class="showcase-shell">
+      <header class="masthead">
+        <div>
+          <p class="eyebrow">@ours/forcegraph-tsl</p>
+          <h1>Graph behavior, on display.</h1>
+          <p class="lede">A local, interactive exhibit of nodes, links, layout, and state change driven by the package.</p>
+        </div>
+        <div class="masthead-actions"><a href="#examples">Browse examples</a><output id="runtime-status" class="runtime-status" data-state="loading">Starting renderer</output></div>
+      </header>
+
+      <section class="stage" aria-label="Interactive force graph showcase">
+        <canvas id="graph" aria-label="Interactive force graph"></canvas>
+        <aside class="control-dock" aria-label="Showcase controls" data-presentation-state="ready">
+          <div class="scenario-control">
+            <p class="control-label">Scenario</p>
+            <div class="button-row scenario-row" role="group" aria-label="Scenario">
+              <button type="button" data-dataset="basic" aria-pressed="true">Basic tree</button>
+              <button type="button" data-dataset="clusters" aria-pressed="false">Clusters</button>
+              <button type="button" data-dataset="flow" aria-pressed="false">Flow</button>
+              <button type="button" data-dataset="scale" aria-pressed="false">1k scale</button>
+            </div>
+          </div>
+          <div class="dock-actions" role="group" aria-label="Primary showcase actions">
+            <button type="button" id="layout-button" aria-pressed="true">Pause</button>
+            <button type="button" id="overview-button">Reset view</button>
+            <details class="options-panel">
+              <summary>Options</summary>
+              <div class="options-body">
+                <div class="button-row" role="group" aria-label="Graph options">
+                  <button type="button" id="focus-button" aria-pressed="false">Focus core</button>
+                  <button type="button" id="theme-button" aria-pressed="false">Warm theme</button>
+                  <button type="button" id="surface-button" aria-pressed="true">Metallic surface</button>
+                  <button type="button" id="expand-button">Expand branch</button>
+                </div>
+                <dl class="metrics" aria-label="Renderer diagnostics">
+                  <div><dt>Backend</dt><dd id="metric-backend">—</dd></div>
+                  <div><dt>Nodes / links</dt><dd id="metric-size">—</dd></div>
+                  <div><dt>Draw calls</dt><dd id="metric-draws">—</dd></div>
+                  <div><dt>Transform</dt><dd id="metric-transform">—</dd></div>
+                  <div><dt>Surface</dt><dd id="metric-surface">—</dd></div>
+                </dl>
+              </div>
+            </details>
+          </div>
+        </aside>
+      </section>
+
+      <section class="caption-grid" aria-label="Showcase notes">
+        <article><h2>Interactive</h2><p>Hover, click to enter a node world, restore the overview, and drag nodes. Expand branch demonstrates a topology patch and a cancellable pop-in motion.</p></article>
+        <article><h2>Stateful</h2><p>Theme, focus, and metallic-surface controls update shared GPU uniforms without replacing materials.</p></article>
+        <article><h2>Inspectable</h2><p>Live diagnostics expose the selected backend, graph size, draw-call shape, transform path, and the 1k scale data lane.</p></article>
+      </section>
+
+      <section id="examples" class="example-gallery" aria-labelledby="examples-title">
+        <div class="gallery-heading"><div><p class="eyebrow">Example gallery</p><h2 id="examples-title">One capability per stage.</h2></div><p>Standalone routes, one shared runtime, and the real package behind every frame.</p></div>
+        <div class="example-grid" data-example-gallery></div>
+      </section>
+    </main>
+    <script type="module" src="./showcase.js"></script>
+  </body>
+</html>

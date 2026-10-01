@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Corpus Atlas · ForceGraph TSL</title>
+  <script type="importmap">{"imports":{"@ours/forcegraph-tsl":"../dist/index.js","three":"../vendor/three.module.js","three/tsl":"../vendor/three.tsl.js","three/webgpu":"../vendor/three.webgpu.js"}}</script>
+  <link rel="stylesheet" href="./corpus.css">
+  <link rel="icon" href="data:,">
+</head>
+<body data-ui-theme="vector-relay">
+  <main>
+    <header>
+      <div><span class="eyebrow">SYNTHETIC CORPUS ATLAS</span><h1 data-title>Archive graph</h1><p data-status>Loading local metadata…</p></div>
+      <div class="actions" aria-label="Atlas controls">
+        <details class="control-group" data-control-group="search-navigation">
+          <summary>Search / Navigation</summary>
+          <div class="control-menu">
+            <select data-center aria-label="Overview center" title="Main hub places the connected folder hub at the exact canvas center."><option value="root">Center: archive root</option><option value="hub">Center: main hub</option><option value="graph">Center: whole graph</option></select>
+          </div>
+        </details>
+        <details class="control-group" data-control-group="view">
+          <summary>View</summary>
+          <div class="control-menu">
+            <button type="button" data-types>Show type overlay</button>
+            <button type="button" data-overview>Full overview</button>
+            <button type="button" data-reset>Clear focus</button>
+          </div>
+        </details>
+        <details class="control-group" data-control-group="motion-studio">
+          <summary>Motion Studio</summary>
+          <div class="control-menu">
+            <button type="button" data-replay>Replay build</button>
+            <select data-replay-type aria-label="Replay cue"></select>
+            <button type="button" data-studio aria-expanded="false">Open studio</button>
+            <button type="button" data-motion>Motion: full</button>
+          </div>
+        </details>
+      </div>
+    </header>
+    <section class="stage">
+      <canvas aria-label="Interactive full archive corpus graph"></canvas>
+      <div class="trace-layer" data-trace-layer aria-hidden="true"></div>
+      <div class="view-controls" aria-label="Graph view controls">
+        <button type="button" data-zoom-in aria-label="Zoom in">+</button>
+        <button type="button" data-zoom-out aria-label="Zoom out">−</button>
+        <button type="button" data-auto-frame aria-pressed="true">Auto fit</button>
+        <button type="button" data-spread aria-pressed="true" title="Adapt node spacing to the viewport. Turn off for the natural layout.">Spread</button>
+      </div>
+      <div class="ingest-progress" data-ingest hidden><div><span data-ingest-title>BUILDING CORPUS</span><output data-ingest-label>0%</output></div><progress data-ingest-progress value="0" max="1"></progress></div>
+      <div class="search-results" data-search-results hidden aria-live="polite"></div>
+      <label class="search-dock"><span>Find in corpus</span><input type="search" data-search placeholder="Search files, folders, extensions…" autocomplete="off" spellcheck="false"><select data-search-animation aria-label="Search animation"></select></label>
+      <aside class="motion-studio" data-studio-panel hidden aria-label="Motion preset studio">
+        <div class="motion-studio-heading"><div><span>Motion studio</span><strong data-studio-title>Signal Choreography</strong></div><button type="button" data-studio-close>Close</button></div>
+        <fieldset class="scene-presets"><legend>Scene preset</legend><div data-scene-presets></div></fieldset>
+        <div class="cue-grid">
+          <fieldset><legend>Search cue</legend><div data-search-cues></div></fieldset>
+          <fieldset><legend>Replay cue</legend><div data-replay-cues></div></fieldset>
+        </div>
+        <div class="motion-tuning">
+          <fieldset><legend>Tempo</legend><div data-tempo-presets></div></fieldset>
+          <label>Trail intensity <span><input type="range" min="20" max="100" value="68" step="1" data-trail><output data-trail-value>68%</output></span></label>
+        </div>
+        <p data-studio-description>Sequential light travel with a single arrival bounce at each node.</p>
+      </aside>
+      <button class="search-exit" type="button" data-search-exit hidden>Back to overview</button>
+      <div class="metrics" data-metrics></div>
+      <div class="hint">Drag to orbit · Pinch or scroll to zoom · Select a node to explore</div>
+    </section>
+    <section class="inspector">
+      <aside class="legend" aria-label="Node families"><span><i class="folder"></i>Folders</span><span><i class="document"></i>Documents</span><span><i class="image"></i>Images</span><span><i class="data"></i>Data</span><span><i class="type"></i>Types</span></aside>
+      <div><span class="eyebrow">SELECTED</span><h2 data-selected-title>Full corpus</h2><code data-selected-path></code><p data-selected-detail>Every archive entry is represented without extracting file contents.</p></div>
+    </section>
+  </main>
+  <script type="module" src="./corpus.js"></script>
+</body>
+</html>

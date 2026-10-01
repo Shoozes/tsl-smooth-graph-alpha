@@ -1,0 +1,8 @@
+{
+  "schema": "public-source-ancestry/v1",
+  "project": "tsl-smooth-graph",
+  "upstream_revision": "8c59170f7bab1b77157a4f4687a868a8aba5539f",
+  "package": "@ours/forcegraph-tsl",
+  "version": "0.3.0-alpha.1",
+  "description": "Reviewed source snapshot derived from the upstream revision."
+}

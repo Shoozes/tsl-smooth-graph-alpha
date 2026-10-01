@@ -1,0 +1,538 @@
+{
+  "schema": "forcegraph_local_corpus_manifest_v1",
+  "archive": "aurora-synthetic-library.zip",
+  "entryCount": 88,
+  "fileCount": 72,
+  "directoryCount": 16,
+  "totalBytes": 308836,
+  "records": [
+    {
+      "path": "Aurora",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Research",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Research/graph-layout",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Research/graph-layout/overview.md",
+      "kind": "file",
+      "size": 905,
+      "extension": ".md"
+    },
+    {
+      "path": "Aurora/Research/graph-layout/study-notes.txt",
+      "kind": "file",
+      "size": 1042,
+      "extension": ".txt"
+    },
+    {
+      "path": "Aurora/Research/graph-layout/example-data.json",
+      "kind": "file",
+      "size": 1179,
+      "extension": ".json"
+    },
+    {
+      "path": "Aurora/Research/graph-layout/measurements.csv",
+      "kind": "file",
+      "size": 1316,
+      "extension": ".csv"
+    },
+    {
+      "path": "Aurora/Research/graph-layout/concept-sketch.png",
+      "kind": "file",
+      "size": 1453,
+      "extension": ".png"
+    },
+    {
+      "path": "Aurora/Research/graph-layout/reference-map.svg",
+      "kind": "file",
+      "size": 1590,
+      "extension": ".svg"
+    },
+    {
+      "path": "Aurora/Research/retrieval",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Research/retrieval/overview.md",
+      "kind": "file",
+      "size": 1727,
+      "extension": ".md"
+    },
+    {
+      "path": "Aurora/Research/retrieval/study-notes.txt",
+      "kind": "file",
+      "size": 1864,
+      "extension": ".txt"
+    },
+    {
+      "path": "Aurora/Research/retrieval/example-data.json",
+      "kind": "file",
+      "size": 2001,
+      "extension": ".json"
+    },
+    {
+      "path": "Aurora/Research/retrieval/measurements.csv",
+      "kind": "file",
+      "size": 2138,
+      "extension": ".csv"
+    },
+    {
+      "path": "Aurora/Research/retrieval/concept-sketch.png",
+      "kind": "file",
+      "size": 2275,
+      "extension": ".png"
+    },
+    {
+      "path": "Aurora/Research/retrieval/reference-map.svg",
+      "kind": "file",
+      "size": 2412,
+      "extension": ".svg"
+    },
+    {
+      "path": "Aurora/Research/rendering",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Research/rendering/overview.md",
+      "kind": "file",
+      "size": 2549,
+      "extension": ".md"
+    },
+    {
+      "path": "Aurora/Research/rendering/study-notes.txt",
+      "kind": "file",
+      "size": 2686,
+      "extension": ".txt"
+    },
+    {
+      "path": "Aurora/Research/rendering/example-data.json",
+      "kind": "file",
+      "size": 2823,
+      "extension": ".json"
+    },
+    {
+      "path": "Aurora/Research/rendering/measurements.csv",
+      "kind": "file",
+      "size": 2960,
+      "extension": ".csv"
+    },
+    {
+      "path": "Aurora/Research/rendering/concept-sketch.png",
+      "kind": "file",
+      "size": 3097,
+      "extension": ".png"
+    },
+    {
+      "path": "Aurora/Research/rendering/reference-map.svg",
+      "kind": "file",
+      "size": 3234,
+      "extension": ".svg"
+    },
+    {
+      "path": "Aurora/Research/interaction",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Research/interaction/overview.md",
+      "kind": "file",
+      "size": 3371,
+      "extension": ".md"
+    },
+    {
+      "path": "Aurora/Research/interaction/study-notes.txt",
+      "kind": "file",
+      "size": 3508,
+      "extension": ".txt"
+    },
+    {
+      "path": "Aurora/Research/interaction/example-data.json",
+      "kind": "file",
+      "size": 3645,
+      "extension": ".json"
+    },
+    {
+      "path": "Aurora/Research/interaction/measurements.csv",
+      "kind": "file",
+      "size": 3782,
+      "extension": ".csv"
+    },
+    {
+      "path": "Aurora/Research/interaction/concept-sketch.png",
+      "kind": "file",
+      "size": 3919,
+      "extension": ".png"
+    },
+    {
+      "path": "Aurora/Research/interaction/reference-map.svg",
+      "kind": "file",
+      "size": 4056,
+      "extension": ".svg"
+    },
+    {
+      "path": "Aurora/Design",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Design/materials",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Design/materials/overview.md",
+      "kind": "file",
+      "size": 4193,
+      "extension": ".md"
+    },
+    {
+      "path": "Aurora/Design/materials/study-notes.txt",
+      "kind": "file",
+      "size": 4330,
+      "extension": ".txt"
+    },
+    {
+      "path": "Aurora/Design/materials/example-data.json",
+      "kind": "file",
+      "size": 4467,
+      "extension": ".json"
+    },
+    {
+      "path": "Aurora/Design/materials/measurements.csv",
+      "kind": "file",
+      "size": 4604,
+      "extension": ".csv"
+    },
+    {
+      "path": "Aurora/Design/materials/concept-sketch.png",
+      "kind": "file",
+      "size": 4741,
+      "extension": ".png"
+    },
+    {
+      "path": "Aurora/Design/materials/reference-map.svg",
+      "kind": "file",
+      "size": 4878,
+      "extension": ".svg"
+    },
+    {
+      "path": "Aurora/Design/motion",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Design/motion/overview.md",
+      "kind": "file",
+      "size": 5015,
+      "extension": ".md"
+    },
+    {
+      "path": "Aurora/Design/motion/study-notes.txt",
+      "kind": "file",
+      "size": 5152,
+      "extension": ".txt"
+    },
+    {
+      "path": "Aurora/Design/motion/example-data.json",
+      "kind": "file",
+      "size": 5289,
+      "extension": ".json"
+    },
+    {
+      "path": "Aurora/Design/motion/measurements.csv",
+      "kind": "file",
+      "size": 5426,
+      "extension": ".csv"
+    },
+    {
+      "path": "Aurora/Design/motion/concept-sketch.png",
+      "kind": "file",
+      "size": 5563,
+      "extension": ".png"
+    },
+    {
+      "path": "Aurora/Design/motion/reference-map.svg",
+      "kind": "file",
+      "size": 5700,
+      "extension": ".svg"
+    },
+    {
+      "path": "Aurora/Design/accessibility",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Design/accessibility/overview.md",
+      "kind": "file",
+      "size": 5837,
+      "extension": ".md"
+    },
+    {
+      "path": "Aurora/Design/accessibility/study-notes.txt",
+      "kind": "file",
+      "size": 5974,
+      "extension": ".txt"
+    },
+    {
+      "path": "Aurora/Design/accessibility/example-data.json",
+      "kind": "file",
+      "size": 6111,
+      "extension": ".json"
+    },
+    {
+      "path": "Aurora/Design/accessibility/measurements.csv",
+      "kind": "file",
+      "size": 6248,
+      "extension": ".csv"
+    },
+    {
+      "path": "Aurora/Design/accessibility/concept-sketch.png",
+      "kind": "file",
+      "size": 6385,
+      "extension": ".png"
+    },
+    {
+      "path": "Aurora/Design/accessibility/reference-map.svg",
+      "kind": "file",
+      "size": 6522,
+      "extension": ".svg"
+    },
+    {
+      "path": "Aurora/Design/typography",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Design/typography/overview.md",
+      "kind": "file",
+      "size": 6659,
+      "extension": ".md"
+    },
+    {
+      "path": "Aurora/Design/typography/study-notes.txt",
+      "kind": "file",
+      "size": 6796,
+      "extension": ".txt"
+    },
+    {
+      "path": "Aurora/Design/typography/example-data.json",
+      "kind": "file",
+      "size": 6933,
+      "extension": ".json"
+    },
+    {
+      "path": "Aurora/Design/typography/measurements.csv",
+      "kind": "file",
+      "size": 7070,
+      "extension": ".csv"
+    },
+    {
+      "path": "Aurora/Design/typography/concept-sketch.png",
+      "kind": "file",
+      "size": 7207,
+      "extension": ".png"
+    },
+    {
+      "path": "Aurora/Design/typography/reference-map.svg",
+      "kind": "file",
+      "size": 7344,
+      "extension": ".svg"
+    },
+    {
+      "path": "Aurora/Engineering",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Engineering/data-model",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Engineering/data-model/overview.md",
+      "kind": "file",
+      "size": 7481,
+      "extension": ".md"
+    },
+    {
+      "path": "Aurora/Engineering/data-model/study-notes.txt",
+      "kind": "file",
+      "size": 7618,
+      "extension": ".txt"
+    },
+    {
+      "path": "Aurora/Engineering/data-model/example-data.json",
+      "kind": "file",
+      "size": 7755,
+      "extension": ".json"
+    },
+    {
+      "path": "Aurora/Engineering/data-model/measurements.csv",
+      "kind": "file",
+      "size": 7892,
+      "extension": ".csv"
+    },
+    {
+      "path": "Aurora/Engineering/data-model/concept-sketch.png",
+      "kind": "file",
+      "size": 8029,
+      "extension": ".png"
+    },
+    {
+      "path": "Aurora/Engineering/data-model/reference-map.svg",
+      "kind": "file",
+      "size": 8166,
+      "extension": ".svg"
+    },
+    {
+      "path": "Aurora/Engineering/workers",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Engineering/workers/overview.md",
+      "kind": "file",
+      "size": 8303,
+      "extension": ".md"
+    },
+    {
+      "path": "Aurora/Engineering/workers/study-notes.txt",
+      "kind": "file",
+      "size": 8440,
+      "extension": ".txt"
+    },
+    {
+      "path": "Aurora/Engineering/workers/example-data.json",
+      "kind": "file",
+      "size": 8577,
+      "extension": ".json"
+    },
+    {
+      "path": "Aurora/Engineering/workers/measurements.csv",
+      "kind": "file",
+      "size": 8714,
+      "extension": ".csv"
+    },
+    {
+      "path": "Aurora/Engineering/workers/concept-sketch.png",
+      "kind": "file",
+      "size": 8851,
+      "extension": ".png"
+    },
+    {
+      "path": "Aurora/Engineering/workers/reference-map.svg",
+      "kind": "file",
+      "size": 796,
+      "extension": ".svg"
+    },
+    {
+      "path": "Aurora/Engineering/camera",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Engineering/camera/overview.md",
+      "kind": "file",
+      "size": 933,
+      "extension": ".md"
+    },
+    {
+      "path": "Aurora/Engineering/camera/study-notes.txt",
+      "kind": "file",
+      "size": 1070,
+      "extension": ".txt"
+    },
+    {
+      "path": "Aurora/Engineering/camera/example-data.json",
+      "kind": "file",
+      "size": 1207,
+      "extension": ".json"
+    },
+    {
+      "path": "Aurora/Engineering/camera/measurements.csv",
+      "kind": "file",
+      "size": 1344,
+      "extension": ".csv"
+    },
+    {
+      "path": "Aurora/Engineering/camera/concept-sketch.png",
+      "kind": "file",
+      "size": 1481,
+      "extension": ".png"
+    },
+    {
+      "path": "Aurora/Engineering/camera/reference-map.svg",
+      "kind": "file",
+      "size": 1618,
+      "extension": ".svg"
+    },
+    {
+      "path": "Aurora/Engineering/release",
+      "kind": "directory",
+      "size": 0,
+      "extension": ""
+    },
+    {
+      "path": "Aurora/Engineering/release/overview.md",
+      "kind": "file",
+      "size": 1755,
+      "extension": ".md"
+    },
+    {
+      "path": "Aurora/Engineering/release/study-notes.txt",
+      "kind": "file",
+      "size": 1892,
+      "extension": ".txt"
+    },
+    {
+      "path": "Aurora/Engineering/release/example-data.json",
+      "kind": "file",
+      "size": 2029,
+      "extension": ".json"
+    },
+    {
+      "path": "Aurora/Engineering/release/measurements.csv",
+      "kind": "file",
+      "size": 2166,
+      "extension": ".csv"
+    },
+    {
+      "path": "Aurora/Engineering/release/concept-sketch.png",
+      "kind": "file",
+      "size": 2303,
+      "extension": ".png"
+    },
+    {
+      "path": "Aurora/Engineering/release/reference-map.svg",
+      "kind": "file",
+      "size": 2440,
+      "extension": ".svg"
+    }
+  ]
+}
