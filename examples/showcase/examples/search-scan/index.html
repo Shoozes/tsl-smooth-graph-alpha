@@ -36,8 +36,10 @@
           <label class="scan-check"><input type="checkbox" data-reduced>Reduced motion</label>
         </div>
         <output class="scan-status" data-status role="status" aria-live="polite">Starting the renderer</output>
+        <nav class="scan-graphics" aria-label="Graphics mode"><a href="?backend=canvas2d" data-compatibility>Compatibility mode</a><a href="./index.html" data-automatic>Automatic graphics</a></nav>
       </section>
     </main>
-    <script type="module" src="./search-scan.js"></script>
+    <script type="module" src="./search-scan-boot.js"></script>
+    <noscript><p class="scan-script-notice">Enable JavaScript to run this graph demo.</p></noscript>
   </body>
 </html>

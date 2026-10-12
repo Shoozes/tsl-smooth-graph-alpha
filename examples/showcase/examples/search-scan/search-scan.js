@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { createForceGraph3D, createThreePlatform, NodeFlags } from '@ours/forcegraph-tsl';
 import { buildSearchScanFixture } from './search-scan-model.js';
 import { createSearchScanPrefab } from './search-scan-prefab.js';
+import { observeSearchScanGraphics } from './search-scan-graphics.js';
 
 const find = (selector) => document.querySelector(selector);
 const canvas = find('#scan-canvas');
@@ -23,6 +24,8 @@ const groupById = new Map(model.groups.map((group) => [group.id, group]));
 const initialFingerprint = JSON.stringify({ nodes: model.nodes, links: model.links });
 const removeListeners = [];
 let renderer, scene, camera, graph, controls, prefab, resizeObserver;
+let removeGraphicsObserver;
+let gpuRequested = parameters.get('backend') !== 'canvas2d';
 let frameRequest;
 let previousTime;
 let timeMs = 0;
@@ -75,12 +78,16 @@ async function start() {
     if (disposed) return;
     if (forceWebGL && !gpuAvailable) throw new Error('WebGL2 is unavailable in this browser. Open the example without backend=webgl2 to use the Canvas fallback.');
     if (!gpuAvailable) {
+      gpuRequested = false;
       const { createSearchScanCanvasHost } = await import('./search-scan-canvas.js');
       if (disposed) return;
       ({ graph, renderer } = createSearchScanCanvasHost({ THREE, canvas, scene, camera, model }));
       backend = 'Canvas2D fallback';
     } else {
       renderer = new THREE.WebGPURenderer({ canvas, antialias: true, alpha: false, forceWebGL });
+      // Shader/device errors can be reported by Three without throwing from render().
+      // Finish the current renderer call before disposing and changing the page.
+      removeGraphicsObserver = observeSearchScanGraphics({ renderer, onError: (error) => queueMicrotask(() => fail(error)) });
       renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
       renderer.setClearColor(0x070708, 1);
       await renderer.init();
@@ -116,17 +123,18 @@ async function start() {
     resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvas);
     resize();
+    if (disposed) return;
     const desired = Number(parameters.get('t') ?? 0);
     timeMs = Number.isFinite(desired) ? Math.max(0, Math.min(prefab.durationMs, desired)) : 0;
     if (reducedMotion) timeMs = prefab.durationMs;
     playing = !reducedMotion && parameters.get('paused') !== '1' && timeMs < prefab.durationMs;
     ui.time.max = String(prefab.durationMs);
     ui.counts.textContent = `${model.nodes.length.toLocaleString()} nodes · ${model.links.length.toLocaleString()} links · ${backend}`;
-    ui.status.textContent = reducedMotion ? 'Reduced motion · stationary overview, all replay results available.' : 'Ready · drag to explore, or keep Follow camera enabled for the full sequence.';
+    const recoveryNotice = parameters.get('fallback') === 'graphics' ? 'Graphics restarted in compatibility mode. ' : '';
+    ui.status.textContent = recoveryNotice + (reducedMotion ? 'Reduced motion · stationary overview, all replay results available.' : 'Ready · drag to explore, or keep Follow camera enabled for the full sequence.');
     setEnabled(true);
     updatePlaybackControls();
     scheduleFrame();
-    renderer.backend?.device?.lost?.then((info) => { if (!disposed) fail(new Error(`GPU device lost: ${info.message || info.reason}. Reload to restart.`)); });
     window.__searchScan = Object.freeze({
       seek(milliseconds) { seek(milliseconds); },
       inspect() { return {
@@ -285,8 +293,11 @@ function frame(timestamp) {
       controls.target.set(pose.target.x, pose.target.y, pose.target.z);
     }
     graph.update(elapsed / 1000);
+    if (disposed) return;
     graph.render();
+    if (disposed) return;
     renderer.render(scene, camera);
+    if (disposed) return;
     renderedFrames += 1;
     drawCount = renderer.info.render.calls;
     ui.time.value = String(Math.round(timeMs));
@@ -349,11 +360,29 @@ function setEnabled(enabled) { for (const element of document.querySelectorAll('
 function listen(target, type, handler, options) { target.addEventListener(type, handler, options); removeListeners.push(() => target.removeEventListener(type, handler, options)); }
 function fail(error) {
   if (disposed) return;
-  ui.status.textContent = error instanceof Error ? error.message : String(error);
+  const message = error instanceof Error ? error.message : String(error);
+  // A canvas that has acquired a GPU context cannot acquire a 2D context.
+  // Restart on the same page with a fresh canvas; the forced fallback cannot loop.
+  const retry = gpuRequested ? new URL(location.href) : null;
+  if (retry) {
+    retry.searchParams.set('backend', 'canvas2d');
+    retry.searchParams.set('fallback', 'graphics');
+    if (prefab && currentMode === 'reference') {
+      retry.searchParams.set('t', String(Math.round(timeMs)));
+      if (playing) retry.searchParams.delete('paused');
+      else retry.searchParams.set('paused', '1');
+    }
+  }
+  document.body.dataset.presentation = 'false';
+  ui.status.textContent = retry ? 'Graphics could not start. Opening compatibility mode…' : `Unable to render the graph: ${message}`;
   ui.status.dataset.error = 'true';
   canvas.dataset.phase = 'error';
   console.error('Search scan failed:', error);
   cleanup();
+  if (retry) {
+    try { location.replace(retry.href); }
+    catch { ui.status.textContent = 'Graphics could not start. Choose Compatibility mode below to retry.'; }
+  }
 }
 function cleanup() {
   if (disposed) return;
@@ -361,14 +390,20 @@ function cleanup() {
   canvas.dataset.disposed = 'true';
   playing = false;
   cancelAnimationFrame(frameRequest);
-  resizeObserver?.disconnect();
-  for (const remove of removeListeners.splice(0)) remove();
-  controls?.removeEventListener('start', onManualNavigation);
-  controls?.removeEventListener('change', scheduleFrame);
-  controls?.dispose();
-  prefab?.dispose();
-  layer.replaceChildren();
-  graph?.dispose();
-  renderer?.dispose();
+  const releases = [
+    () => removeGraphicsObserver?.(),
+    () => resizeObserver?.disconnect(),
+    ...removeListeners.splice(0),
+    () => controls?.removeEventListener('start', onManualNavigation),
+    () => controls?.removeEventListener('change', scheduleFrame),
+    () => controls?.dispose(),
+    () => prefab?.dispose(),
+    () => layer.replaceChildren(),
+    () => graph?.dispose(),
+    () => renderer?.dispose()
+  ];
+  for (const release of releases) {
+    try { release(); } catch (error) { console.warn('Search scan cleanup:', error); }
+  }
   setEnabled(false);
 }

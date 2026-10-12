@@ -140,3 +140,38 @@ limitation described above. The final full repository check passed 277 tests.
   documented integration point. No RAG source or retrieval authority changed.
 
 No actionable P0/P1/P2 issue remains in the tested fallback workflow.
+
+## Published demo recovery correction
+
+A report against the published Search scan page prompted a separate runtime
+review. The deployed HTML, import map, modules, and artifact matched the verified
+static output; the default route rendered in this browser's Canvas fallback.
+The specific failure on the reporting device was not reproduced. The review did
+find a concrete recovery gap: a successful context probe could be followed by a
+renderer initialization or reported shader/device failure, which disposed the
+page without offering a working renderer.
+
+The host now observes Three's renderer error, device-loss, and WebGL shader-error
+callbacks, preserving the borrowed hooks and restoring them during cleanup. A
+GPU-path failure restarts the same page once with a fresh canvas in labelled
+Compatibility mode. Canvas failures cannot loop. Visible graphics-mode links
+also let a viewer recover when a driver produces an empty scene without reporting
+an error. An external boot module exposes import failures instead of leaving the
+page indefinitely on “Starting the renderer.”
+
+Browser verification used private fixtures outside the public source:
+
+- A temporary capability probe was made to succeed while the real renderer
+  failed during initialization. The page automatically reopened in Canvas mode,
+  displayed the recovery notice, and retained the paused 3.50-second reference
+  view. This is fault-injection evidence for recovery, not GPU rendering proof.
+- Searching `source` after that recovery produced five matches and a working
+  7.20-second replay.
+- A deliberately unavailable entry module produced a visible load-error
+  message, disabled unusable controls, and retained the graphics-mode links.
+
+Ten focused Node tests cover reported error categories, device/context loss,
+shader errors, callback ownership and restoration, exception behavior, and
+nested calls. Static dependency traversal still starts from an external module.
+Three may consume some pipeline failures without invoking these error hooks;
+this correction does not certify GPU execution on the reporting device.

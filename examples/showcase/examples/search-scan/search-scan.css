@@ -31,7 +31,7 @@ button:hover, select:hover { border-color: #8cae9b; background: #18251e; }
 button:disabled { cursor: default; opacity: .45; }
 button[data-action="play"] { min-width: 66px; border-color: #4a8270; color: #87efc9; }
 button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid #90f5cc; outline-offset: 3px; }
-.scan-caption { position: fixed; left: 28px; bottom: 159px; display: flex; flex-direction: column; gap: 7px; pointer-events: none; }
+.scan-caption { position: fixed; left: 28px; bottom: 180px; display: flex; flex-direction: column; gap: 7px; pointer-events: none; }
 .scan-caption > span { color: #74877b; font-size: 9px; }
 .scan-caption > span:first-child { text-transform: uppercase; letter-spacing: .16em; color: #7db69c; }
 .scan-caption strong { font-weight: 400; font-size: 22px; color: #bfcfc4; }
@@ -46,6 +46,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 .scan-check input { accent-color: #64c49f; width: 15px; height: 15px; }
 .scan-status { display: block; min-height: 12px; margin-top: 7px; font-size: 9px; color: #89998e; }
 .scan-status[data-error="true"] { color: #ffa6b4; }
+.scan-graphics { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 6px; font-size: 9px; }
+.scan-graphics a { display: inline-flex; align-items: center; min-height: 24px; color: #9bbaa9; text-underline-offset: 3px; }
+.scan-graphics a:hover { color: #b8f9dc; }
+.scan-script-notice { position: fixed; left: 24px; bottom: 180px; padding: 12px; background: #101913; color: #ffa6b4; }
 body[data-presentation="true"] :is(.scan-header, .scan-search, .scan-caption, .scan-controls) { display: none; }
 @media (max-width: 680px) {
   .scan-group-label { font-size: 10px; }
@@ -56,7 +60,7 @@ body[data-presentation="true"] :is(.scan-header, .scan-search, .scan-caption, .s
   .scan-search { top: 80px; left: 16px; width: min(280px, calc(100vw - 32px)); }
   .scan-search > label { display: none; }
   .scan-search :is(button, input) { min-height: 44px; }
-  .scan-caption { left: 16px; bottom: 212px; }
+  .scan-caption { left: 16px; bottom: 234px; }
   .scan-caption strong { font-size: 17px; }
   .scan-controls { bottom: max(10px, env(safe-area-inset-bottom)); left: 10px; right: 10px; padding: 9px; }
   .scan-timeline { gap: 7px; }

@@ -89,6 +89,11 @@ Most examples require a working WebGPU or WebGL2 context. The gallery keeps
 its navigation available if renderer initialization fails, disables the
 unusable graph controls, and links to Search scan. Search scan's Canvas2D
 fallback approximates its shader halo and does not prove TSL/GPU parity.
+Search scan also restarts once in Compatibility mode when GPU initialization,
+a renderer-reported shader error, or device loss fails after capability probing.
+Its visible Compatibility mode link can be used when a device reports no error
+but still produces an empty scene. Renderer setup and shader execution are
+separate from successful static deployment.
 Browser/backend evidence must name which renderer actually ran.
 
 Publishing this website does not publish the npm package or qualify a new

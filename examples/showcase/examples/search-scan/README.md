@@ -33,6 +33,15 @@ specific to this example; it is not a new core renderer or a public package API.
 Its radial halo approximates the TSL material. Canvas results do not establish
 GPU rendering or GPU performance.
 
+If graphics startup, a reported shader error, or device loss fails after the
+capability probe, the host restarts this page once in **Compatibility mode**.
+That restart obtains a fresh canvas: a canvas already used by a GPU renderer
+cannot be reused for a 2D context. The reference playhead and pause state are
+preserved when available; a local search is reset by the page restart. A failure
+in Canvas mode remains visible and cannot trigger another automatic retry.
+The **Compatibility mode** and **Automatic graphics** links remain available
+even if the renderer stops. Module-load failures also produce a visible message.
+
 Useful query parameters:
 
 | Parameter | Effect |
@@ -41,7 +50,7 @@ Useful query parameters:
 | `?paused=1&t=11100` | Completed constellation overview. |
 | `?presentation=1` | Hide example controls and captions for a clean stage. Combine with `paused` and `t` for captures. |
 | `?motion=reduced` | Stationary overview; disables playback. |
-| `?backend=webgl2` | Require WebGL2; report an error if unavailable, without silently falling back. |
+| `?backend=webgl2` | Try WebGL2 directly; a failure restarts in labelled Compatibility mode. |
 | `?backend=canvas2d` | Exercise the explicit Canvas fallback. |
 
 ## Behavior
@@ -89,7 +98,9 @@ it does not replace node or link materials on every animation frame.
 | [search-scan-timeline.js](search-scan-timeline.js) | Pure time sampling; no DOM, renderer, timers, or retrieval. |
 | [search-scan-prefab.js](search-scan-prefab.js) | Scanner scene objects, camera poses, transition strands, and bounded DOM labels. |
 | [search-scan.js](search-scan.js) | Host initialization, search, playback controls, one render loop, and teardown. |
+| [search-scan-boot.js](search-scan-boot.js) | Load the example, preserve graphics-mode links, and show module-load failures. |
 | [search-scan-canvas.js](search-scan-canvas.js) | Explicit example-only fallback using the headless graph and Canvas2D. |
+| [search-scan-graphics.js](search-scan-graphics.js) | Observe renderer-reported errors and device loss; restore borrowed hooks during cleanup. |
 | [search-scan.css](search-scan.css) | Reference-inspired stage and existing Vector Relay controls. |
 
 The prefab borrows `THREE`, `TSL`, `graph`, `scene`, `camera`, and `labelLayer`.

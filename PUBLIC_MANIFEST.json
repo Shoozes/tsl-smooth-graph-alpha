@@ -2,10 +2,10 @@
   "schema": "public-release-manifest/v1",
   "project": "tsl-smooth-graph",
   "status": "pass",
-  "generated_at_utc": "2026-10-12T07:04:10Z",
+  "generated_at_utc": "2026-10-12T12:39:45Z",
   "fingerprint_algorithm": "sha256-json-file-table-v1",
   "fingerprint_definition": "SHA256(UTF8(JSON.stringify({schema:\"public-source-content/v1\",files:<ordered path,bytes,sha256 table>}) + \"\\n\"))",
-  "source_fingerprint_sha256": "c7beada2b399ed2f098b36782a22fbcf6d8906be4abc8491710ce4d8d2447c8a",
+  "source_fingerprint_sha256": "2238065cac284e2730f67608bce4892f58078a60b7ea97f6009b655e6f23c360",
   "self_manifest_exclusion": "PUBLIC_MANIFEST.json",
   "manifest_complete": true,
   "verification_exclusions": [
@@ -13,9 +13,9 @@
     "dist",
     "node_modules"
   ],
-  "file_count": 161,
-  "total_file_bytes": 2526112,
-  "scanned_text_files": 155,
+  "file_count": 164,
+  "total_file_bytes": 2547885,
+  "scanned_text_files": 158,
   "binary_ascii_string_scans": 6,
   "files": [
     {
@@ -60,8 +60,8 @@
     },
     {
       "path": "design-qa.md",
-      "bytes": 11153,
-      "sha256": "d4f62cad45208ad8fd7962d39e201cef798c7fedf9f5870dbe9ffd4721ae0aae"
+      "bytes": 13252,
+      "sha256": "637e1ebb566d26fc5a8d19c4f7cb2d6da520ab0e1ea0042a7578a77a7bf675ef"
     },
     {
       "path": "docs/API.md",
@@ -75,8 +75,8 @@
     },
     {
       "path": "docs/DEPLOYMENT.md",
-      "bytes": 5991,
-      "sha256": "d25d5f4642854c3188b1225b0382bc26bf7fe8d86de724b7e8f1e736c6dbec43"
+      "bytes": 6348,
+      "sha256": "9b343086e8654bef5dad939f5bdac46db19929e2794225f77aa4d42934799ec4"
     },
     {
       "path": "docs/PACKAGE_EXPORTS.md",
@@ -260,13 +260,13 @@
     },
     {
       "path": "examples/showcase/examples/search-scan/README.md",
-      "bytes": 11209,
-      "sha256": "263ef207b13881a713b24b5bf952edd295154e14430925579227d35c113bed7b"
+      "bytes": 12101,
+      "sha256": "a8ea8c7c58e8f97f979c3199406e51377f6eb02f503dce6df8d16f4edb584dfa"
     },
     {
       "path": "examples/showcase/examples/search-scan/index.html",
-      "bytes": 3516,
-      "sha256": "0e464b8cabfdac4e52fd8f0de54a35c0f4215406f75258006c6872090e77d4b4"
+      "bytes": 3820,
+      "sha256": "66b4e93bba466234526cfac5b932e57a0261c4b646ce02e7db4901f6cceecdd6"
     },
     {
       "path": "examples/showcase/examples/search-scan/media/search-scan-overview.jpg",
@@ -274,9 +274,19 @@
       "sha256": "624443f93b58be1c37a720e341283b51b33eb447f9c9e8ce88708d15d216116a"
     },
     {
+      "path": "examples/showcase/examples/search-scan/search-scan-boot.js",
+      "bytes": 967,
+      "sha256": "29e3b7041718853e0aa79beb7ac0849407dad21c012084b80834ba4de1cb08b1"
+    },
+    {
       "path": "examples/showcase/examples/search-scan/search-scan-canvas.js",
       "bytes": 14141,
       "sha256": "a29574057e65f30ead31012a148a0852d2532ef3f41ef925baa60aeaf55129a0"
+    },
+    {
+      "path": "examples/showcase/examples/search-scan/search-scan-graphics.js",
+      "bytes": 4906,
+      "sha256": "f0ac7f1e535125c4c672680e2650fb3b5512de6931b6529bbcf7ddbcd9e6cfce"
     },
     {
       "path": "examples/showcase/examples/search-scan/search-scan-model.js",
@@ -295,13 +305,13 @@
     },
     {
       "path": "examples/showcase/examples/search-scan/search-scan.css",
-      "bytes": 5452,
-      "sha256": "4d1729d52500bae911f9d2175b1cb5337a148e28176b9935c302fb4f60a72ee0"
+      "bytes": 5840,
+      "sha256": "dd1907e3120ebb592e427c879cfb6a7bd23807366a07286b838507a51f64d064"
     },
     {
       "path": "examples/showcase/examples/search-scan/search-scan.js",
-      "bytes": 17747,
-      "sha256": "11f50fd48de55bc851e8bd4312c6dd7204123cdd8a4137659b32c6d07baa05e0"
+      "bytes": 19456,
+      "sha256": "d4ff0d2e3048fa7b6c5a55bb4f6ea62ccd18e94de187bb772960f9ac1c5dea74"
     },
     {
       "path": "examples/showcase/index.html",
@@ -420,8 +430,8 @@
     },
     {
       "path": "scripts/run-tests.mjs",
-      "bytes": 1710,
-      "sha256": "22d474c2775e02e0e2e4b5154bf3daf208bf13d8294e5202ee42e57a0e2d0fac"
+      "bytes": 1745,
+      "sha256": "b909a855291d07185b1b9e5aaa46e2f6c7bbc747b281836d2e591dc2cdd90c00"
     },
     {
       "path": "scripts/showcase-server.mjs",
@@ -674,6 +684,11 @@
       "sha256": "41bf79c668e485a82d63fd9cd17b75c863eecd26a27bb3650d7a22718e405279"
     },
     {
+      "path": "tests/browser/search-scan-graphics.test.mjs",
+      "bytes": 10116,
+      "sha256": "47a7fc4e80a2184994c6ad255f8087031902ae5bfd5c9abf185f438302647600"
+    },
+    {
       "path": "tests/browser/search-scan-prefab.test.mjs",
       "bytes": 13084,
       "sha256": "4c20a15c32c2fcdb8f528dc43c7f5fc23765cdf0c12071e97a085a3687aabfbd"
@@ -832,7 +847,7 @@
       "capture_record": "evidence/tsl-smooth-graph-final-visual-browser-audit.json",
       "reason": "Root opened and inspected this fresh installed-Chrome capture. Graph datasets and Aurora corpus names, folders and file sizes are invented demo data; no private archive contents or paths appear.",
       "provenance": "synthetic-capture",
-      "review_status": "carried-forward-unchanged",
+      "review_status": "carried-forward-identical-bytes",
       "reviewed_manifest_generated_at_utc": "2026-10-01T02:47:51.564Z"
     },
     {
@@ -842,7 +857,7 @@
       "capture_record": "evidence/tsl-smooth-graph-final-visual-browser-audit.json",
       "reason": "Root opened and inspected this fresh installed-Chrome capture. Graph datasets and Aurora corpus names, folders and file sizes are invented demo data; no private archive contents or paths appear.",
       "provenance": "synthetic-capture",
-      "review_status": "carried-forward-unchanged",
+      "review_status": "carried-forward-identical-bytes",
       "reviewed_manifest_generated_at_utc": "2026-10-01T02:47:51.564Z"
     },
     {
@@ -852,7 +867,7 @@
       "capture_record": "evidence/tsl-smooth-graph-final-visual-browser-audit.json",
       "reason": "Root opened and inspected this fresh installed-Chrome capture. Graph datasets and Aurora corpus names, folders and file sizes are invented demo data; no private archive contents or paths appear.",
       "provenance": "synthetic-capture",
-      "review_status": "carried-forward-unchanged",
+      "review_status": "carried-forward-identical-bytes",
       "reviewed_manifest_generated_at_utc": "2026-10-01T02:47:51.564Z"
     },
     {
@@ -862,7 +877,7 @@
       "capture_record": "evidence/tsl-smooth-graph-final-visual-browser-audit.json",
       "reason": "Root opened and inspected this fresh installed-Chrome capture. Graph datasets and Aurora corpus names, folders and file sizes are invented demo data; no private archive contents or paths appear.",
       "provenance": "synthetic-capture",
-      "review_status": "carried-forward-unchanged",
+      "review_status": "carried-forward-identical-bytes",
       "reviewed_manifest_generated_at_utc": "2026-10-01T02:47:51.564Z"
     },
     {
@@ -872,7 +887,7 @@
       "capture_record": "evidence/tsl-smooth-graph-final-visual-browser-audit.json",
       "reason": "Root opened and inspected this fresh installed-Chrome capture. Graph datasets and Aurora corpus names, folders and file sizes are invented demo data; no private archive contents or paths appear.",
       "provenance": "synthetic-capture",
-      "review_status": "carried-forward-unchanged",
+      "review_status": "carried-forward-identical-bytes",
       "reviewed_manifest_generated_at_utc": "2026-10-01T02:47:51.564Z"
     },
     {
@@ -882,29 +897,28 @@
       "capture_record": "design-qa.md",
       "reason": "Opened and visually inspected the actual implementation-only browser capture: synthetic graph vocabulary and controls, with explicit Canvas2D fallback label. It contains no supplied video frame, private document, original upload name, or machine path.",
       "provenance": "synthetic-browser-capture",
-      "review_status": "reviewed-this-candidate"
+      "review_status": "carried-forward-identical-bytes"
     }
   ],
   "reviewed_exceptions": [],
   "review": {
-    "kind": "source-delta-and-publication-preparation",
+    "kind": "search-scan-graphics-recovery-source-delta",
     "reviewer": "assistant/root",
-    "public_base_revision": "2421a5938f73be86a774d1fd870d20c20cf1d5c0",
-    "previous_source_fingerprint_sha256": "413d366cc4f37d42836f7c2aaf4b72c1276efd5fd75eeef9524749a66cbaee41",
+    "public_base_revision": "68a581ee3ea74912322b846677d111cd5b9bfddd",
+    "previous_source_fingerprint_sha256": "c7beada2b399ed2f098b36782a22fbcf6d8906be4abc8491710ce4d8d2447c8a",
     "evidence": [
       "design-qa.md",
-      "docs/VIDEO_REFERENCE_WORKFLOW.md",
-      "docs/PACKAGE_EXPORTS.md",
+      "examples/showcase/examples/search-scan/README.md",
       "docs/DEPLOYMENT.md"
     ],
     "mechanical_checks": [
-      "Full source inventory and exact file hashes; no source symlinks or ignored ordinary files.",
+      "Full ordinary source inventory and exact file hashes; no source symlinks or ignored ordinary files.",
       "Bounded credential and machine-path patterns scanned across source bytes.",
-      "pnpm run check: 191 product + 86 example/tooling tests; documentation links pass.",
-      "Five historical media reviews matched unchanged bytes; the new sixth synthetic capture was visually reviewed.",
-      "The exact local npm archive passed isolated consumer installation, eight runtime entry points, packaged assets, and both strict type profiles."
+      "Ten focused graphics-observer Node tests and six static Pages build/preflight tests pass.",
+      "Browser fault injection verified one-time recovery from renderer initialization failure, paused reference state, subsequent search, and visible module-load failure.",
+      "All six media approval records matched unchanged exact bytes; no media was added or replaced."
     ],
-    "provenance_note": "This is a new delta review, not a rerun of the unavailable original sanitizer. Historical media approval records are carried forward only for identical bytes. No unseen checker or review-input hash is reused."
+    "provenance_note": "This is a bounded delta review, not a rerun of the unavailable original sanitizer. Historical media approvals are carried forward only for identical bytes. No unseen checker or review-input hash is reused."
   },
   "findings_count": 0,
   "findings": [],
