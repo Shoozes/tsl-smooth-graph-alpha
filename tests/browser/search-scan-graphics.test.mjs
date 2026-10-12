@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import * as THREE from 'three/webgpu';
 import { observeSearchScanGraphics } from '../../examples/showcase/examples/search-scan/search-scan-graphics.js';
 
 test('graphics errors keep original callback behavior and report only safe categories', () => {
@@ -194,4 +195,137 @@ test('accessor-backed callbacks restore their original value and descriptor', ()
     assert.equal(callback, original, mode);
     assert.deepEqual(Object.getOwnPropertyDescriptor(renderer, 'onError'), descriptor, mode);
   }
+});
+
+test('captured Three pipeline and TSL build errors recover once without renderer callbacks', () => {
+  const previous = THREE.getConsoleFunction();
+  try {
+    for (const [message, expected] of [
+      ['THREE.WebGPURenderer: Render pipeline creation failed (node pipeline): private shader source', /WebGPU render pipeline creation failed/],
+      ['THREE.WebGPURenderer: Async render pipeline creation failed (link pipeline): https://example.invalid/private', /WebGPU render pipeline creation failed/],
+      ['THREE.TSL: Error: private shader construction detail', /search graph shader could not be built/]
+    ]) {
+      const errors = [], calls = [];
+      let rendererCalls = 0;
+      const original = function (...args) { calls.push({ receiver: this, args }); return 27; };
+      THREE.setConsoleFunction(original);
+      const renderer = { onError() { rendererCalls += 1; }, onDeviceLost() { rendererCalls += 1; }, debug: {} };
+      const dispose = observeSearchScanGraphics({ renderer, THREE, onError: (error) => errors.push(error) });
+      try {
+        const receiver = {}, detail = {};
+        const hook = THREE.getConsoleFunction();
+        assert.equal(Reflect.apply(hook, receiver, ['error', message, detail]), 27);
+        assert.deepEqual(calls, [{ receiver, args: ['error', message, detail] }]);
+        assert.equal(rendererCalls, 0, 'Captured failures do not invoke the renderer callbacks.');
+        assert.equal(errors.length, 1);
+        assert.equal(errors[0].name, 'SearchScanGraphicsError');
+        assert.match(errors[0].message, expected);
+        assert.doesNotMatch(errors[0].message, /private|https|shader source/);
+        assert.equal('cause' in errors[0], false);
+        hook('error', message);
+        renderer.onError({ api: 'WebGPU', type: 'GPUValidationError' });
+        assert.equal(errors.length, 1, 'Logging and renderer callbacks share one recovery notification.');
+        assert.equal(calls.length, 2, 'Later Three messages still reach the original logger.');
+      } finally { dispose(); }
+      assert.equal(THREE.getConsoleFunction(), original);
+    }
+  } finally { THREE.setConsoleFunction(previous); }
+});
+
+test('Three warnings and unrelated errors remain ordinary forwarded messages', () => {
+  const previous = THREE.getConsoleFunction();
+  const errors = [], calls = [];
+  const original = (...args) => calls.push(args);
+  THREE.setConsoleFunction(original);
+  const dispose = observeSearchScanGraphics({ renderer: {}, THREE, onError: (error) => errors.push(error) });
+  try {
+    const messages = [
+      ['warn', 'THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.'],
+      ['warn', 'THREE.TSL: Declaration name already in use. Renamed.'],
+      ['warn', 'THREE.WebGPURenderer: Render pipeline creation failed (warning only)'],
+      ['log', 'THREE.TSL: An informational message'],
+      ['error', 'THREE.WebGPURenderer: Unrelated renderer error'],
+      ['error', 'THREE.WebGPURenderer: Render pipeline creation failed unexpectedly'],
+      ['error', 'THREE.OtherRenderer: Render pipeline creation failed (other renderer)'],
+      ['error', 'THREE.WebGPURenderer: Compute pipeline creation failed (unused compute path)'],
+      ['error', { message: 'THREE.TSL: Do not coerce arbitrary objects.' }]
+    ];
+    for (const args of messages) THREE.getConsoleFunction()(...args);
+    assert.deepEqual(calls, messages);
+    assert.equal(errors.length, 0);
+  } finally { dispose(); THREE.setConsoleFunction(previous); }
+});
+
+test('Three logger exceptions escape after recovery and cannot be masked by the observer', () => {
+  const previous = THREE.getConsoleFunction();
+  const loggerError = new Error('original logger exception');
+  const errors = [];
+  const original = () => { throw loggerError; };
+  THREE.setConsoleFunction(original);
+  const dispose = observeSearchScanGraphics({ renderer: {}, THREE, onError(error) { errors.push(error); throw new Error('observer exception'); } });
+  try {
+    assert.throws(() => THREE.getConsoleFunction()('error', 'THREE.TSL: Error: build failed'), (error) => error === loggerError);
+    assert.equal(errors.length, 1);
+  } finally { dispose(); THREE.setConsoleFunction(previous); }
+});
+
+test('Three logging disposal preserves a later owner and retained hooks only forward', () => {
+  const previous = THREE.getConsoleFunction();
+  const errors = [], calls = [];
+  const original = function (...args) { calls.push({ receiver: this, args }); return 'original logger'; };
+  THREE.setConsoleFunction(original);
+  const dispose = observeSearchScanGraphics({ renderer: {}, THREE, onError: (error) => errors.push(error) });
+  try {
+    const retained = THREE.getConsoleFunction();
+    const laterOwner = () => {};
+    THREE.setConsoleFunction(laterOwner);
+    dispose();
+    dispose();
+    assert.equal(THREE.getConsoleFunction(), laterOwner);
+    const receiver = {};
+    const args = ['error', 'THREE.TSL: Error: after disposal'];
+    assert.equal(Reflect.apply(retained, receiver, args), 'original logger');
+    assert.deepEqual(calls, [{ receiver, args }]);
+    assert.equal(errors.length, 0);
+  } finally { dispose(); THREE.setConsoleFunction(previous); }
+});
+
+test('without a custom Three logger, default console and StackTrace forwarding are preserved', (t) => {
+  const previous = THREE.getConsoleFunction();
+  const calls = [], errors = [];
+  for (const type of ['log', 'warn', 'error']) {
+    t.mock.method(console, type, function (...args) { calls.push({ type, receiver: this, args }); return type; });
+  }
+  THREE.setConsoleFunction(null);
+  const dispose = observeSearchScanGraphics({ renderer: {}, THREE, onError: (error) => errors.push(error) });
+  try {
+    const hook = THREE.getConsoleFunction();
+    const detail = {}, formatted = new Error('formatted stack');
+    const stackTrace = { isStackTrace: true, getError(message) { assert.equal(this, stackTrace); assert.equal(message, 'THREE.TSL: Error: build failed'); return formatted; } };
+    assert.equal(hook('log', 'THREE.Ready', detail), 'log');
+    assert.equal(hook('warn', 'THREE.Ordinary warning', detail), 'warn');
+    assert.equal(hook('error', 'THREE.TSL: Error: build failed', stackTrace), 'error');
+    assert.deepEqual(calls, [
+      { type: 'log', receiver: console, args: ['THREE.Ready', detail] },
+      { type: 'warn', receiver: console, args: ['THREE.Ordinary warning', detail] },
+      { type: 'error', receiver: console, args: [formatted] }
+    ]);
+    assert.equal(errors.length, 1);
+  } finally { dispose(); assert.equal(THREE.getConsoleFunction(), null); THREE.setConsoleFunction(previous); }
+});
+
+test('failed public logger installation restores previous logging and renderer hooks', () => {
+  const original = () => {}, originalError = () => {};
+  let current = original;
+  const library = {
+    getConsoleFunction() { assert.equal(this, library); return current; },
+    setConsoleFunction(value) { assert.equal(this, library); current = value; if (value !== original) throw new Error('logger installation failed'); }
+  };
+  const renderer = { onError: originalError };
+  assert.throws(() => observeSearchScanGraphics({ renderer, THREE: library, onError() {} }), /logger installation failed/);
+  assert.equal(current, original);
+  assert.equal(renderer.onError, originalError);
+  assert.equal(Object.hasOwn(renderer, 'onDeviceLost'), false);
+  assert.throws(() => observeSearchScanGraphics({ renderer, THREE: {}, onError() {} }), /getConsoleFunction/);
+  assert.equal(renderer.onError, originalError);
 });

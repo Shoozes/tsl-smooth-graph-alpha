@@ -13,6 +13,7 @@ const exampleTests = [
   'responsive-framing.test.mjs',
   'search-scan-prefab.test.mjs',
   'search-scan-graphics.test.mjs',
+  'search-scan-playback.test.mjs',
   'search-scan.test.mjs',
   'static-server.test.mjs'
 ].map((name) => `tests/browser/${name}`);

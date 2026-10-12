@@ -35,10 +35,15 @@ GPU rendering or GPU performance.
 
 If graphics startup, a reported shader error, or device loss fails after the
 capability probe, the host restarts this page once in **Compatibility mode**.
+Graphics initialization has a ten-second deadline, so an adapter or renderer
+promise that never settles cannot leave playback controls unavailable forever.
+Recovery observes Three's specific pipeline and TSL build-error messages as
+well as renderer error callbacks.
 That restart obtains a fresh canvas: a canvas already used by a GPU renderer
 cannot be reused for a 2D context. The reference playhead and pause state are
 preserved when available; a local search is reset by the page restart. A failure
 in Canvas mode remains visible and cannot trigger another automatic retry.
+An explicit page motion choice is preserved across the automatic restart.
 The **Compatibility mode** and **Automatic graphics** links remain available
 even if the renderer stops. Module-load failures also produce a visible message.
 
@@ -49,7 +54,8 @@ Useful query parameters:
 | `?paused=1&t=3500` | Deterministic rules-cluster view at 3.50 seconds. |
 | `?paused=1&t=11100` | Completed constellation overview. |
 | `?presentation=1` | Hide example controls and captions for a clean stage. Combine with `paused` and `t` for captures. |
-| `?motion=reduced` | Stationary overview; disables playback. |
+| `?motion=reduced` | Start with a stationary overview; **Play animation** explicitly enables motion for this page. |
+| `?motion=full` | Explicitly enable this page's animation, including when the OS default is reduced motion. |
 | `?backend=webgl2` | Try WebGL2 directly; a failure restarts in labelled Compatibility mode. |
 | `?backend=canvas2d` | Exercise the explicit Canvas fallback. |
 
@@ -73,20 +79,27 @@ history. It does not depend on completing previous animation frames.
   and disable playback. Reset restores the reference sequence.
 - **Pause / Play / Replay:** pause at the current playhead; play resumes it;
   replay restarts after completion. The playhead slider always pauses to seek.
+  When reduced motion is active, **Play animation** explicitly enables motion
+  for this page and starts the replay.
 - **Restart:** reset the active sequence and re-enable camera following.
 - **Overview:** show the whole graph while preserving the playhead.
 - **Manual navigation:** drag to orbit and scroll/pinch to zoom. Navigation
   disables Follow camera; checking it again rejoins the replay's camera.
 - **Reduced motion:** show the stationary overview without waving, pulsing, or
-  automatic camera movement. OS preference and the URL option take priority
-  over the local control. Changing the OS preference is observed throughout the
-  page lifetime.
+  automatic camera movement. The OS preference and URL option determine the
+  initial state. The checkbox and **Play animation** can override that default
+  for this page. Selecting reduced motion immediately pauses; clearing it makes
+  Play available without starting motion. System changes are observed until
+  the viewer explicitly chooses a setting on the page.
 - **Keyboard:** focus the canvas; Space toggles playback, left/right arrows
   seek by 300 ms, and Home shows the overview.
 
 The host uses one demand-driven animation loop. Playback requests the next
 frame; paused, completed, hidden, and reduced-motion views stop continuous
 rendering. Resizing, camera input, and controls request a new frame as needed.
+The playhead follows elapsed visible time even when frames arrive slowly;
+pausing, hiding the page, and restoring it reset the frame clock so hidden time
+does not advance the replay.
 The host dims surrounding groups at replay boundaries using existing node flags;
 it does not replace node or link materials on every animation frame.
 
@@ -223,9 +236,12 @@ comparison process, and lessons for a future Clone Jutsu review gate.
 Run `pnpm run check` for the repository's TypeScript, product, example, tooling,
 and documentation checks. Targeted tests are in
 [search-scan.test.mjs](../../../../tests/browser/search-scan.test.mjs) and
-[search-scan-prefab.test.mjs](../../../../tests/browser/search-scan-prefab.test.mjs).
+[search-scan-prefab.test.mjs](../../../../tests/browser/search-scan-prefab.test.mjs),
+with application playback checks in
+[search-scan-playback.test.mjs](../../../../tests/browser/search-scan-playback.test.mjs).
 They exercise timeline determinism, membership, replay boundaries, repeated
-groups, backward seeking, construction rollback, and resource ownership.
+groups, backward seeking, construction rollback, resource ownership, elapsed
+playback time, and explicit motion controls.
 
 Despite their directory name, these tests run in Node. Browser-rendered
 appearance, actual interaction, and backend verification are recorded separately

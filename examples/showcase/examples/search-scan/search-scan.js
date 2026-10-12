@@ -25,14 +25,17 @@ const initialFingerprint = JSON.stringify({ nodes: model.nodes, links: model.lin
 const removeListeners = [];
 let renderer, scene, camera, graph, controls, prefab, resizeObserver;
 let removeGraphicsObserver;
+let startupTimer;
 let gpuRequested = parameters.get('backend') !== 'canvas2d';
 let frameRequest;
 let previousTime;
 let timeMs = 0;
 let playing = false;
 const urlReducedMotion = parameters.get('motion') === 'reduced';
-let localReducedMotion = false;
-let reducedMotion = media.matches || urlReducedMotion;
+// System/URL preferences set the initial policy. An explicit page control wins.
+// motion=full carries an explicit animation opt-in through renderer recovery.
+let localReducedMotion = parameters.get('motion') === 'full' ? false : undefined;
+let reducedMotion = localReducedMotion ?? (media.matches || urlReducedMotion);
 let followCamera = true;
 let showOverview = false;
 let disposed = false;
@@ -41,6 +44,7 @@ let lastGraphFocus = '';
 let currentMode = 'reference';
 let backend = 'Starting';
 let drawCount = 0;
+let canvasPaintCount = 0;
 let renderedFrames = 0;
 
 document.body.dataset.presentation = String(parameters.get('presentation') === '1');
@@ -69,6 +73,7 @@ void start();
 
 async function start() {
   try {
+    startupTimer = setTimeout(() => fail(new Error('Graphics initialization did not finish within 10 seconds.')), 10_000);
     const requestedBackend = parameters.get('backend');
     const forceWebGL = requestedBackend === 'webgl2';
     scene = new THREE.Scene();
@@ -87,7 +92,7 @@ async function start() {
       renderer = new THREE.WebGPURenderer({ canvas, antialias: true, alpha: false, forceWebGL });
       // Shader/device errors can be reported by Three without throwing from render().
       // Finish the current renderer call before disposing and changing the page.
-      removeGraphicsObserver = observeSearchScanGraphics({ renderer, onError: (error) => queueMicrotask(() => fail(error)) });
+      removeGraphicsObserver = observeSearchScanGraphics({ renderer, THREE, onError: (error) => queueMicrotask(() => fail(error)) });
       renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
       renderer.setClearColor(0x070708, 1);
       await renderer.init();
@@ -131,14 +136,14 @@ async function start() {
     ui.time.max = String(prefab.durationMs);
     ui.counts.textContent = `${model.nodes.length.toLocaleString()} nodes · ${model.links.length.toLocaleString()} links · ${backend}`;
     const recoveryNotice = parameters.get('fallback') === 'graphics' ? 'Graphics restarted in compatibility mode. ' : '';
-    ui.status.textContent = recoveryNotice + (reducedMotion ? 'Reduced motion · stationary overview, all replay results available.' : 'Ready · drag to explore, or keep Follow camera enabled for the full sequence.');
+    ui.status.textContent = recoveryNotice + playbackStatus();
     setEnabled(true);
     updatePlaybackControls();
     scheduleFrame();
     window.__searchScan = Object.freeze({
       seek(milliseconds) { seek(milliseconds); },
       inspect() { return {
-        schema: 'search_scan_example_v1', backend, renderedFrames, sceneDraws: drawCount,
+        schema: 'search_scan_example_v1', backend, renderedFrames, sceneDraws: drawCount, canvasPaintCalls: canvasPaintCount,
         graphDraws: graph?.getDiagnostics().drawCalls, nodeCount: model.nodes.length, linkCount: model.links.length,
         playing, reducedMotion, followCamera, timeMs, mode: currentMode,
         sourceUnchanged: JSON.stringify({ nodes: model.nodes, links: model.links }) === initialFingerprint,
@@ -147,6 +152,7 @@ async function start() {
       dispose: cleanup
     });
   } catch (error) { fail(error); }
+  finally { clearTimeout(startupTimer); startupTimer = undefined; }
 }
 
 async function hasGraphicsContext(forceWebGL) {
@@ -161,12 +167,16 @@ async function hasGraphicsContext(forceWebGL) {
 
 function bindControls() {
   listen(ui.play, 'click', () => {
-    if (!prefab || reducedMotion) return;
+    if (!prefab || disposed) return;
+    if (reducedMotion) {
+      localReducedMotion = false;
+      applyReducedMotion();
+    }
     if (timeMs >= prefab.durationMs) timeMs = 0;
     playing = !playing;
     showOverview = false;
     previousTime = undefined;
-    updatePlaybackControls();
+    updatePlaybackControls(true);
   });
   listen(ui.restart, 'click', () => {
     if (!prefab) return;
@@ -175,7 +185,7 @@ function bindControls() {
     setFollow(true);
     playing = !reducedMotion && prefab.durationMs > 0;
     previousTime = undefined;
-    updatePlaybackControls();
+    updatePlaybackControls(true);
   });
   listen(ui.overview, 'click', () => {
     showOverview = true;
@@ -191,7 +201,7 @@ function bindControls() {
   listen(ui.search, 'submit', (event) => { event.preventDefault(); runSearch(); });
   listen(ui.reset, 'click', restoreReference);
   listen(canvas, 'keydown', (event) => {
-    if (event.key === ' ' && !reducedMotion) { event.preventDefault(); ui.play.click(); }
+    if (event.key === ' ') { event.preventDefault(); ui.play.click(); }
     else if (event.key === 'Home') { event.preventDefault(); ui.overview.click(); }
     else if (event.key === 'ArrowRight') { event.preventDefault(); seek(timeMs + 300); }
     else if (event.key === 'ArrowLeft') { event.preventDefault(); seek(timeMs - 300); }
@@ -248,17 +258,18 @@ function seek(value) {
   playing = false;
   showOverview = false;
   previousTime = undefined;
-  updatePlaybackControls();
+  updatePlaybackControls(true);
 }
 
 function applyReducedMotion() {
-  const next = media.matches || urlReducedMotion || localReducedMotion;
+  const next = localReducedMotion ?? (media.matches || urlReducedMotion);
   const changed = next !== reducedMotion;
   reducedMotion = next;
   ui.reduced.checked = reducedMotion;
   updateMotionControl();
   if (!changed) return;
   playing = false;
+  previousTime = undefined;
   showOverview = reducedMotion;
   if (prefab && reducedMotion) timeMs = prefab.durationMs;
   setFollow(true);
@@ -276,11 +287,13 @@ function frame(timestamp) {
   frameRequest = undefined;
   if (disposed) return;
   try {
-    const elapsed = previousTime === undefined || document.hidden ? 0 : Math.max(0, Math.min(100, timestamp - previousTime));
+    // This is a presentation clock: sparse visible frames must not stretch the
+    // replay. Visibility and user controls reset the baseline when time is paused.
+    const elapsed = previousTime === undefined || document.hidden ? 0 : Math.max(0, timestamp - previousTime);
     previousTime = timestamp;
     if (playing) {
       timeMs = Math.min(prefab.durationMs, timeMs + elapsed * Number(ui.speed.value));
-      if (timeMs === prefab.durationMs) { playing = false; updatePlaybackControls(); }
+      if (timeMs === prefab.durationMs) { playing = false; updatePlaybackControls(true); }
     }
     if (!followCamera) {
       controls.update();
@@ -299,7 +312,8 @@ function frame(timestamp) {
     renderer.render(scene, camera);
     if (disposed) return;
     renderedFrames += 1;
-    drawCount = renderer.info.render.calls;
+    drawCount = renderer.info.render.drawCalls ?? 0;
+    canvasPaintCount = renderer.info.render.canvasPaintCalls ?? 0;
     ui.time.value = String(Math.round(timeMs));
     ui.clock.textContent = `${(timeMs / 1000).toFixed(2)} / ${(prefab.durationMs / 1000).toFixed(2)} s`;
     canvas.dataset.phase = sample.phase;
@@ -342,16 +356,23 @@ function resize() {
   scheduleFrame();
 }
 
-function updatePlaybackControls() {
-  ui.play.textContent = playing ? 'Pause' : timeMs >= (prefab?.durationMs ?? Infinity) ? 'Replay' : 'Play';
+function playbackStatus() {
+  if (reducedMotion) return 'Reduced motion · stationary overview, all replay results available.';
+  if (playing) return 'Playing · use Pause or the playhead to explore.';
+  if (prefab?.durationMs > 0 && timeMs >= prefab.durationMs) return 'Replay complete · press Replay to watch again.';
+  return 'Paused · press Play to resume.';
+}
+function updatePlaybackControls(announce = false) {
+  ui.play.textContent = reducedMotion ? 'Play animation' : playing ? 'Pause' : timeMs >= (prefab?.durationMs ?? Infinity) ? 'Replay' : 'Play';
   ui.play.setAttribute('aria-pressed', String(playing));
-  ui.play.disabled = !prefab || reducedMotion || prefab.durationMs === 0 || disposed;
+  ui.play.disabled = !prefab || prefab.durationMs === 0 || disposed;
+  if (announce) ui.status.textContent = playbackStatus();
   updateMotionControl();
   scheduleFrame();
 }
 function updateMotionControl() {
-  ui.reduced.disabled = !prefab || disposed || media.matches || urlReducedMotion;
-  ui.reduced.title = media.matches ? 'Enabled by your operating system.' : urlReducedMotion ? 'Enabled by this preview URL.' : 'Use a stationary overview.';
+  ui.reduced.disabled = !prefab || disposed;
+  ui.reduced.title = localReducedMotion !== undefined ? 'Your motion choice applies to this page.' : media.matches ? 'Defaults to your operating system preference. You can change it for this page.' : urlReducedMotion ? 'Defaults to this preview URL. You can change it for this page.' : 'Use a stationary overview.';
 }
 function scheduleFrame() {
   if (!disposed && prefab && !document.hidden && frameRequest === undefined) frameRequest = requestAnimationFrame(frame);
@@ -367,6 +388,7 @@ function fail(error) {
   if (retry) {
     retry.searchParams.set('backend', 'canvas2d');
     retry.searchParams.set('fallback', 'graphics');
+    if (localReducedMotion !== undefined) retry.searchParams.set('motion', localReducedMotion ? 'reduced' : 'full');
     if (prefab && currentMode === 'reference') {
       retry.searchParams.set('t', String(Math.round(timeMs)));
       if (playing) retry.searchParams.delete('paused');
@@ -389,6 +411,8 @@ function cleanup() {
   disposed = true;
   canvas.dataset.disposed = 'true';
   playing = false;
+  clearTimeout(startupTimer);
+  startupTimer = undefined;
   cancelAnimationFrame(frameRequest);
   const releases = [
     () => removeGraphicsObserver?.(),

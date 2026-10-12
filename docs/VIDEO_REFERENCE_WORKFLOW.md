@@ -183,13 +183,20 @@ dimming. Recheck the whole composition after a regional correction.
 
 ### Playback and backend checklist
 
+- Start playback through the visible control and observe the scanner, camera,
+  and playhead at separate times. A rendered still or increasing render-call
+  counter does not establish working animation or successful GPU draws.
+- Compare playhead progress with elapsed visible time, including sparse frames.
+  A presentation clock must not stretch an eleven-second replay into minutes.
 - Pause and confirm the settled view stops requesting continuous frames.
 - Seek forward and backward, including exact phase boundaries and group revisits.
 - Exercise search, empty results, reset, replay, and manual camera takeover.
 - Check a narrow viewport, accessible control names, keyboard input, and feedback.
 - Check reduced motion separately: stable overview, no autonomous motion,
   available results, and no continuous redraw. Record whether the OS preference
-  change was actually exercised or only reviewed in code.
+  change was actually exercised or only reviewed in code. Verify the viewer can
+  explicitly opt into this animation through the page's controls, and can stop
+  it again without changing operating-system settings.
 - Name the backend actually observed: WebGPU, WebGL2, or Canvas2D fallback.
   Force the intended backend when claiming its coverage.
 - Keep unavailable required backends visible as failures. The example's explicit

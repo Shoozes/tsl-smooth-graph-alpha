@@ -175,3 +175,47 @@ shader errors, callback ownership and restoration, exception behavior, and
 nested calls. Static dependency traversal still starts from an external module.
 Three may consume some pipeline failures without invoking these error hooks;
 this correction does not certify GPU execution on the reporting device.
+
+## Published playback correction
+
+A follow-up report required checking playback independently of successful page
+loading. The public page's `motion=reduced` route reproduced a concrete lock:
+the graph rendered at 11.10 seconds, but both Replay and the Reduced motion
+checkbox were disabled. The viewer could not explicitly start the animation.
+System reduced motion followed the same application branch, reproduced with
+controlled media-query state in the application tests.
+
+The page now keeps motion preferences as its initial default and offers an
+enabled **Play animation** control. A deliberate Play or Space action enables
+motion for this page; the Reduced motion checkbox remains operable. Selecting
+reduction pauses immediately. Explicit page choices survive graphics recovery.
+Playing, Paused, and Replay complete are announced as those states change.
+
+The old frame loop also discarded elapsed time beyond 100 milliseconds per
+frame. The application regression demonstrated that a 1,500-millisecond visible
+interval advanced the old replay by only 100 milliseconds. The presentation
+clock now uses the elapsed visible interval. Pause, seek, speed changes, and
+visibility transitions still reset its baseline, excluding paused or hidden time.
+
+Two graphics recovery gaps were closed: a never-settling adapter or renderer
+initialization reaches a ten-second deadline; and Three's captured render-pipeline
+or TSL build failures are observed through its public logging hook. Existing
+logging is forwarded and restored without replacing native console methods.
+GPU draw-call diagnostics now use Three's actual draw counter; Canvas paint
+operations have a separate counter. A render() invocation alone is not draw proof.
+
+Browser checks of the rebuilt page used the same Canvas limitation as earlier
+checks. From the previously locked reduced-motion state, **Play animation**
+changed the button to Pause, cleared the page's reduced-motion choice, announced
+Playing, and advanced the playhead from zero through the completed sequence.
+Replay restarted the visible scanner and camera from the roles cluster. The
+full repository check passed **191 product tests and 108 example/tooling tests**,
+including six application playback regressions and sixteen graphics-observer
+tests. These tests use actual application handlers and presentation code with
+controlled browser scheduling and graphics error notifications; they are not
+hardware GPU validation.
+
+The HTML import map versions the two changed JavaScript modules by content hash,
+so a fresh page response also refreshes them when an older boot loader is cached.
+The exact reporting device and its original graphics or motion setting remain
+unknown; these are reproduced application defects and verified recovery paths.

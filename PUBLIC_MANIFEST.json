@@ -2,10 +2,10 @@
   "schema": "public-release-manifest/v1",
   "project": "tsl-smooth-graph",
   "status": "pass",
-  "generated_at_utc": "2026-10-12T12:39:45Z",
+  "generated_at_utc": "2026-10-12T13:07:58Z",
   "fingerprint_algorithm": "sha256-json-file-table-v1",
   "fingerprint_definition": "SHA256(UTF8(JSON.stringify({schema:\"public-source-content/v1\",files:<ordered path,bytes,sha256 table>}) + \"\\n\"))",
-  "source_fingerprint_sha256": "2238065cac284e2730f67608bce4892f58078a60b7ea97f6009b655e6f23c360",
+  "source_fingerprint_sha256": "42e834468f3b7dfee052566b19bea9e3d24a2b463be82b02dd9663d6b955238b",
   "self_manifest_exclusion": "PUBLIC_MANIFEST.json",
   "manifest_complete": true,
   "verification_exclusions": [
@@ -13,9 +13,9 @@
     "dist",
     "node_modules"
   ],
-  "file_count": 164,
-  "total_file_bytes": 2547885,
-  "scanned_text_files": 158,
+  "file_count": 165,
+  "total_file_bytes": 2577633,
+  "scanned_text_files": 159,
   "binary_ascii_string_scans": 6,
   "files": [
     {
@@ -60,8 +60,8 @@
     },
     {
       "path": "design-qa.md",
-      "bytes": 13252,
-      "sha256": "637e1ebb566d26fc5a8d19c4f7cb2d6da520ab0e1ea0042a7578a77a7bf675ef"
+      "bytes": 16027,
+      "sha256": "2c4a406580e4f36f15d7d78252ede33fcf96c299b8637293a916ab034fbd9323"
     },
     {
       "path": "docs/API.md",
@@ -95,8 +95,8 @@
     },
     {
       "path": "docs/VIDEO_REFERENCE_WORKFLOW.md",
-      "bytes": 15783,
-      "sha256": "856fe81813b946f9edca5102e0671fb844617fea91164807495ae42a3c4a82ae"
+      "bytes": 16324,
+      "sha256": "49513f7092a646e70568af50a5786f1d79f412408c24d6a89ac27e54911dcbbe"
     },
     {
       "path": "docs/licenses/three-MIT.txt",
@@ -260,13 +260,13 @@
     },
     {
       "path": "examples/showcase/examples/search-scan/README.md",
-      "bytes": 12101,
-      "sha256": "a8ea8c7c58e8f97f979c3199406e51377f6eb02f503dce6df8d16f4edb584dfa"
+      "bytes": 13274,
+      "sha256": "16a9f7c806b7f608d254b1347806b177b8bb02101bc83fa65e928c2edaea8116"
     },
     {
       "path": "examples/showcase/examples/search-scan/index.html",
-      "bytes": 3820,
-      "sha256": "66b4e93bba466234526cfac5b932e57a0261c4b646ce02e7db4901f6cceecdd6"
+      "bytes": 4058,
+      "sha256": "fd4897d53ecc87c07ce63fc3fdd604df40c552cb6c14b2d256e3ebbe7bcdc3bd"
     },
     {
       "path": "examples/showcase/examples/search-scan/media/search-scan-overview.jpg",
@@ -285,8 +285,8 @@
     },
     {
       "path": "examples/showcase/examples/search-scan/search-scan-graphics.js",
-      "bytes": 4906,
-      "sha256": "f0ac7f1e535125c4c672680e2650fb3b5512de6931b6529bbcf7ddbcd9e6cfce"
+      "bytes": 6941,
+      "sha256": "5afe05903ce9fd74223279a390ab8f2d802c3e67132c51b1cdc00a6e0c7d9abf"
     },
     {
       "path": "examples/showcase/examples/search-scan/search-scan-model.js",
@@ -310,8 +310,8 @@
     },
     {
       "path": "examples/showcase/examples/search-scan/search-scan.js",
-      "bytes": 19456,
-      "sha256": "d4ff0d2e3048fa7b6c5a55bb4f6ea62ccd18e94de187bb772960f9ac1c5dea74"
+      "bytes": 20910,
+      "sha256": "b79cbbf57c20049517daafc23a93efcf5e7fdafae91dcb93c4c26bdae504f82b"
     },
     {
       "path": "examples/showcase/index.html",
@@ -430,8 +430,8 @@
     },
     {
       "path": "scripts/run-tests.mjs",
-      "bytes": 1745,
-      "sha256": "b909a855291d07185b1b9e5aaa46e2f6c7bbc747b281836d2e591dc2cdd90c00"
+      "bytes": 1780,
+      "sha256": "4b5fbd6926e1a2f9ae5bd31a1389d99bc1ba7dc486228bd7ac4203d1970d8a89"
     },
     {
       "path": "scripts/showcase-server.mjs",
@@ -685,8 +685,13 @@
     },
     {
       "path": "tests/browser/search-scan-graphics.test.mjs",
-      "bytes": 10116,
-      "sha256": "47a7fc4e80a2184994c6ad255f8087031902ae5bfd5c9abf185f438302647600"
+      "bytes": 17673,
+      "sha256": "665208c3630bb723d7fa43649de41511701ab7e0462767d1f765a670b416715a"
+    },
+    {
+      "path": "tests/browser/search-scan-playback.test.mjs",
+      "bytes": 13940,
+      "sha256": "e0c46f5436c083cb156a342b21f7e553ec298a51cfa6303a370051b7de851dde"
     },
     {
       "path": "tests/browser/search-scan-prefab.test.mjs",
@@ -902,21 +907,22 @@
   ],
   "reviewed_exceptions": [],
   "review": {
-    "kind": "search-scan-graphics-recovery-source-delta",
+    "kind": "search-scan-playback-and-captured-graphics-recovery-source-delta",
     "reviewer": "assistant/root",
-    "public_base_revision": "68a581ee3ea74912322b846677d111cd5b9bfddd",
-    "previous_source_fingerprint_sha256": "c7beada2b399ed2f098b36782a22fbcf6d8906be4abc8491710ce4d8d2447c8a",
+    "public_base_revision": "353baeb3bee5f0938cf1d58872fca3a58690389b",
+    "previous_source_fingerprint_sha256": "2238065cac284e2730f67608bce4892f58078a60b7ea97f6009b655e6f23c360",
     "evidence": [
       "design-qa.md",
       "examples/showcase/examples/search-scan/README.md",
-      "docs/DEPLOYMENT.md"
+      "docs/VIDEO_REFERENCE_WORKFLOW.md"
     ],
     "mechanical_checks": [
-      "Full ordinary source inventory and exact file hashes; no source symlinks or ignored ordinary files.",
-      "Bounded credential and machine-path patterns scanned across source bytes.",
-      "Ten focused graphics-observer Node tests and six static Pages build/preflight tests pass.",
-      "Browser fault injection verified one-time recovery from renderer initialization failure, paused reference state, subsequent search, and visible module-load failure.",
-      "All six media approval records matched unchanged exact bytes; no media was added or replaced."
+      "Complete physical source inventory equals the Git candidate; exact file hashes, no source symlinks or ignored ordinary files.",
+      "Bounded credential and machine-path patterns scanned across source text and printable binary strings, with zero findings.",
+      "Full repository check passed 191 product tests and 108 example/tooling tests, including six actual-application playback regressions and sixteen graphics-observer tests.",
+      "Browser reproduced the published reduced-motion lock, then verified rebuilt Play animation, advancing replay, replay restart, and pause in Canvas mode.",
+      "Content-versioned import-map entries match the current main and observer module hashes; all six Pages tooling tests passed.",
+      "All six existing media approvals match identical bytes; no media was added or replaced."
     ],
     "provenance_note": "This is a bounded delta review, not a rerun of the unavailable original sanitizer. Historical media approvals are carried forward only for identical bytes. No unseen checker or review-input hash is reused."
   },

@@ -1,18 +1,21 @@
 /**
- * Observe the first graphics failure through Three's renderer callbacks.
+ * Observe the first graphics failure through Three's renderer callbacks and,
+ * when supplied, its public logging hook for captured pipeline/build errors.
  * Existing callbacks keep their receiver, arguments, return values and thrown
  * exceptions. The observer reports fixed, useful categories rather than raw
  * driver messages, shader source, URLs or original events.
  *
- * This does not certify GPU pipeline compilation: Three can log and consume
- * some pipeline errors without invoking any of these callbacks.
+ * Observation does not certify GPU pipeline compilation or rendered pixels.
  *
- * @param {{renderer: object, onError: (error: Error) => void}} options
+ * @param {{renderer: object, THREE?: object, onError: (error: Error) => void}} options
  * @returns {() => void} Idempotent disposer that restores only still-owned hooks.
  */
-export function observeSearchScanGraphics({ renderer, onError } = {}) {
+export function observeSearchScanGraphics({ renderer, THREE, onError } = {}) {
   if (!isObject(renderer)) throw new TypeError('Graphics observation requires a renderer object.');
   if (typeof onError !== 'function') throw new TypeError('Graphics observation requires an onError callback.');
+  if (THREE !== undefined && (!isObject(THREE) || typeof THREE.getConsoleFunction !== 'function' || typeof THREE.setConsoleFunction !== 'function')) {
+    throw new TypeError('Three graphics observation requires getConsoleFunction() and setConsoleFunction().');
+  }
   const debug = renderer.debug;
   if (debug !== undefined && debug !== null && !isObject(debug)) throw new TypeError('Renderer debug settings must be an object.');
   const releases = [];
@@ -31,11 +34,8 @@ export function observeSearchScanGraphics({ renderer, onError } = {}) {
     }
   }
 
-  function install(target, name, describe) {
-    const descriptor = Object.getOwnPropertyDescriptor(target, name);
-    const original = target[name];
-    const usesSetter = descriptor && !('value' in descriptor) && !descriptor.configurable;
-    function hook(...args) {
+  function createHook(original, describe) {
+    return function hook(...args) {
       const invokeOriginal = () => typeof original === 'function' ? Reflect.apply(original, this, args) : undefined;
       if (disposed) return invokeOriginal();
       depth += 1;
@@ -47,7 +47,14 @@ export function observeSearchScanGraphics({ renderer, onError } = {}) {
         depth -= 1;
         if (depth === 0) flush();
       }
-    }
+    };
+  }
+
+  function install(target, name, describe) {
+    const descriptor = Object.getOwnPropertyDescriptor(target, name);
+    const original = target[name];
+    const usesSetter = descriptor && !('value' in descriptor) && !descriptor.configurable;
+    const hook = createHook(original, describe);
     releases.push(() => {
       if (target[name] !== hook) return;
       if (usesSetter) target[name] = original;
@@ -93,11 +100,42 @@ export function observeSearchScanGraphics({ renderer, onError } = {}) {
       return graphicsError(api === 'WebGPU' ? 'The WebGPU graphics device was lost.' : 'The renderer graphics device was lost.');
     });
     if (debug) install(debug, 'onShaderError', () => graphicsError('WebGL2 shader compilation or linking failed.'));
+    if (THREE) {
+      const original = THREE.getConsoleFunction();
+      if (original != null && typeof original !== 'function') throw new TypeError('The existing Three console hook must be a function or null.');
+      const hook = createHook(original ?? forwardThreeConsole, describeThreeError);
+      releases.push(() => {
+        if (THREE.getConsoleFunction() === hook) THREE.setConsoleFunction(original);
+      });
+      THREE.setConsoleFunction(hook);
+      if (THREE.getConsoleFunction() !== hook) throw new TypeError('The Three console hook could not be observed.');
+    }
   } catch (error) {
     dispose();
     throw error;
   }
   return dispose;
+}
+
+function describeThreeError([type, message]) {
+  if (type !== 'error' || typeof message !== 'string') return undefined;
+  // Exact categories emitted by the pinned Three r185 pipeline/NodeManager paths.
+  if (message.startsWith('THREE.WebGPURenderer: Render pipeline creation failed (')
+    || message.startsWith('THREE.WebGPURenderer: Async render pipeline creation failed (')) {
+    return graphicsError('WebGPU render pipeline creation failed for the search graph.');
+  }
+  if (message.startsWith('THREE.TSL: ')) return graphicsError('The search graph shader could not be built.');
+  return undefined;
+}
+
+function forwardThreeConsole(type, message, ...params) {
+  // Match Three's default forwarding when no custom hook was installed. Native
+  // console methods are called, never replaced; preserve its StackTrace display.
+  const stackTrace = params[0];
+  if ((type === 'warn' || type === 'error') && stackTrace?.isStackTrace) {
+    return console[type](stackTrace.getError(message));
+  }
+  return console[type](message, ...params);
 }
 
 function graphicsError(message) {
