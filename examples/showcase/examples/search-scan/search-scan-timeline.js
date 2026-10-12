@@ -107,6 +107,7 @@ export function createSearchScanTimeline(options = {}) {
       groupId: step?.groupId ?? null, previousGroupId: previousStep?.groupId ?? null,
       phaseProgress, scanProgress, activeNodeId: toNodeId, previousNodeId: fromNodeId,
       fromNodeId, toNodeId, nodeProgress,
+      nodeDurationMs: step?.nodeIds.length ? step.durationMs / step.nodeIds.length : 0,
       completedGroupIds: Object.freeze([...completed]),
       visibleNodeIds: !copiedSteps.length ? Object.freeze([]) : phase === 'overview' || complete ? overviewNodeIds : Object.freeze([...visible]),
       overviewProgress: complete ? 1 : phase === 'overview' ? phaseProgress : 0,

@@ -219,3 +219,34 @@ The HTML import map versions the two changed JavaScript modules by content hash,
 so a fresh page response also refreshes them when an older boot loader is cached.
 The exact reporting device and its original graphics or motion setting remain
 unknown; these are reproduced application defects and verified recovery paths.
+
+## Scanner hands and node response
+
+The scanner's decorative rays have been replaced by 24 staggered reaching legs.
+Each leg selects the nearest reachable node in its forward sector, including
+unlabelled points. Its tip reaches, holds the live target position, and retracts;
+a bright node center, teal halo, and expanding ring respond at contact and fade
+after release. The graph remains pinned and its data is unchanged.
+
+The contact planner uses absolute replay time and a bounded per-leg plan cache.
+It skips partial cycles at scan boundaries and checks all crossed label turns
+with a margin for the cursor's small bend. This avoids a hand arriving already
+extended and prevents the fast opening scan from dropping a planted contact.
+Reach and retract geometry have a maximum extension. Contact lights remain
+anchored to the touched node during their analytically sampled fade.
+
+Tests verify actual Float32 leg endpoints and hand/contact mesh world positions
+under marker translation, scale, and camera rotation. A 2-millisecond sweep of
+the real 900-millisecond opening scan verifies uninterrupted feasible holds.
+Additional cases cover nearest targeting, live moved nodes, backward seeking,
+skipped contact frames, empty results, reduction, overview, and owned resources.
+The full repository check passed **191 product tests and 122 example/tooling
+tests**, with zero failures.
+
+The rebuilt page was inspected in the cloud browser's Canvas2D fallback at
+2.30 and 2.38 seconds. Both frames showed six planted hands; leg positions,
+illuminated nodes, and fading contact rings changed between the frames. Play
+advanced the same sequence. The same Three geometry is used for the GPU path;
+the TSL radial halo explicitly multiplies material opacity, and Canvas uses a
+matching documented halo profile. This browser evidence does not establish
+hardware GPU execution or performance.

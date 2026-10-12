@@ -67,11 +67,17 @@ of this synthetic graph; they are not documents. The camera visits **roles →
 rules → review → start → overview** in 11.10 seconds, approximately following
 the recording's sequence and pacing. The text and graph positions are synthetic.
 
-The graph stays pinned. Motion comes from the scanner, bending filaments,
+The graph stays pinned. Motion comes from the scanner, reaching legs,
 transition strands, camera, and progressive label visibility. Seeking backward
 reconstructs the earlier state from elapsed time without accumulating animation
 history. It does not depend on completing previous animation frames.
 
+- **Leg contacts:** 24 staggered hands reach toward the nearest reachable node
+  in each leg's forward sector. Each hand holds its target through the touch,
+  then retracts. The contacted node lights up with a bright center, teal halo,
+  and expanding ring, followed by a short fade. Unlabelled graph points are
+  eligible too. The body and camera can move while a planted tip stays on its
+  node. Contacts stop during cluster travel, overview, and reduced motion.
 - **Find:** case-insensitive substring matching over label text and the fixture's
   annotations. Results are available immediately. The animation replays them
   in fixture order. `source`, `scope`, and `reference` are useful queries.
@@ -109,6 +115,7 @@ it does not replace node or link materials on every animation frame.
 | --- | --- |
 | [search-scan-model.js](search-scan-model.js) | Frozen seeded fixture, local edges, ordered steps, and bounds. |
 | [search-scan-timeline.js](search-scan-timeline.js) | Pure time sampling; no DOM, renderer, timers, or retrieval. |
+| [search-scan-contacts.js](search-scan-contacts.js) | Deterministic nearest-node plans, staggered leg phases, and contact response envelopes. |
 | [search-scan-prefab.js](search-scan-prefab.js) | Scanner scene objects, camera poses, transition strands, and bounded DOM labels. |
 | [search-scan.js](search-scan.js) | Host initialization, search, playback controls, one render loop, and teardown. |
 | [search-scan-boot.js](search-scan-boot.js) | Load the example, preserve graphics-mode links, and show module-load failures. |
@@ -117,7 +124,7 @@ it does not replace node or link materials on every animation frame.
 | [search-scan.css](search-scan.css) | Reference-inspired stage and existing Vector Relay controls. |
 
 The prefab borrows `THREE`, `TSL`, `graph`, `scene`, `camera`, and `labelLayer`.
-It owns only its scanner/strand objects and label subtree. `dispose()` is
+It owns only its scanner/contact/strand objects and label subtree. `dispose()` is
 idempotent and removes/disposes those resources. The host still owns and
 disposes graph, renderer, controls, observers, listeners, and its animation loop.
 
@@ -164,6 +171,16 @@ the active sequence length. `scan.setSequence(steps, { resultNodeIds })` validat
 the replacement before accepting it and returns its duration. The caller resets
 or clamps its playhead. `scan.inspect()` exposes bounded diagnostics for the
 example; these are not core package diagnostics.
+
+Contact targets are chosen from the accepted position snapshot, then their live
+positions are read while drawing. Every touching endpoint is transformed through
+the marker's full inverse world matrix; its scale, camera-facing rotation, and
+height offset cannot separate the hand from the node. Leg cycles and light fades
+come directly from the playhead, including when frames are skipped. The planner
+checks each crossed label transition plus the cursor's bounded bend so a fast
+scan cannot drop a planted contact halfway through its hold. A small fixed pool
+of shared scene primitives provides the highlights without modifying graph data.
+`scan.contactCount` and `scan.inspect().scanner` expose contact diagnostics.
 
 ### Presentation model contract
 

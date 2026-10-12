@@ -2,10 +2,10 @@
   "schema": "public-release-manifest/v1",
   "project": "tsl-smooth-graph",
   "status": "pass",
-  "generated_at_utc": "2026-10-12T13:07:58Z",
+  "generated_at_utc": "2026-10-12T13:57:21Z",
   "fingerprint_algorithm": "sha256-json-file-table-v1",
   "fingerprint_definition": "SHA256(UTF8(JSON.stringify({schema:\"public-source-content/v1\",files:<ordered path,bytes,sha256 table>}) + \"\\n\"))",
-  "source_fingerprint_sha256": "42e834468f3b7dfee052566b19bea9e3d24a2b463be82b02dd9663d6b955238b",
+  "source_fingerprint_sha256": "67da4d0c80da585e88d8b6eb172340a7ffabaf0c52de2fa554c4d321d08a0418",
   "self_manifest_exclusion": "PUBLIC_MANIFEST.json",
   "manifest_complete": true,
   "verification_exclusions": [
@@ -13,9 +13,9 @@
     "dist",
     "node_modules"
   ],
-  "file_count": 165,
-  "total_file_bytes": 2577633,
-  "scanned_text_files": 159,
+  "file_count": 168,
+  "total_file_bytes": 2617466,
+  "scanned_text_files": 162,
   "binary_ascii_string_scans": 6,
   "files": [
     {
@@ -60,8 +60,8 @@
     },
     {
       "path": "design-qa.md",
-      "bytes": 16027,
-      "sha256": "2c4a406580e4f36f15d7d78252ede33fcf96c299b8637293a916ab034fbd9323"
+      "bytes": 17910,
+      "sha256": "cecc06ccee6dcc2183f14fb7525ffaf3858e5c17f2242a37fe7f2596f18db189"
     },
     {
       "path": "docs/API.md",
@@ -95,8 +95,8 @@
     },
     {
       "path": "docs/VIDEO_REFERENCE_WORKFLOW.md",
-      "bytes": 16324,
-      "sha256": "49513f7092a646e70568af50a5786f1d79f412408c24d6a89ac27e54911dcbbe"
+      "bytes": 17293,
+      "sha256": "9c0699cd0d445d25dc195a29203253676459f32e652543e041a74f49c4ddbea2"
     },
     {
       "path": "docs/licenses/three-MIT.txt",
@@ -260,13 +260,13 @@
     },
     {
       "path": "examples/showcase/examples/search-scan/README.md",
-      "bytes": 13274,
-      "sha256": "16a9f7c806b7f608d254b1347806b177b8bb02101bc83fa65e928c2edaea8116"
+      "bytes": 14606,
+      "sha256": "291225aebafdb30d37757d977603d6ff5d4e6e2d5751b712da4c33e3466c3c68"
     },
     {
       "path": "examples/showcase/examples/search-scan/index.html",
-      "bytes": 4058,
-      "sha256": "fd4897d53ecc87c07ce63fc3fdd604df40c552cb6c14b2d256e3ebbe7bcdc3bd"
+      "bytes": 4419,
+      "sha256": "eaf69bfa914f2399675ca2036a25fa69a5d9244a1b75e338bfbd7220da5a2a3e"
     },
     {
       "path": "examples/showcase/examples/search-scan/media/search-scan-overview.jpg",
@@ -280,8 +280,13 @@
     },
     {
       "path": "examples/showcase/examples/search-scan/search-scan-canvas.js",
-      "bytes": 14141,
-      "sha256": "a29574057e65f30ead31012a148a0852d2532ef3f41ef925baa60aeaf55129a0"
+      "bytes": 15622,
+      "sha256": "9dc6e681bd393a55f02f073555adb428520d571feb577ea83f0feae8bb223aab"
+    },
+    {
+      "path": "examples/showcase/examples/search-scan/search-scan-contacts.js",
+      "bytes": 6081,
+      "sha256": "7759aa4ffc0395845e774ce1b63bcea87a6c162da51610fece6dec7c6c057adb"
     },
     {
       "path": "examples/showcase/examples/search-scan/search-scan-graphics.js",
@@ -295,13 +300,13 @@
     },
     {
       "path": "examples/showcase/examples/search-scan/search-scan-prefab.js",
-      "bytes": 25186,
-      "sha256": "0b7008058200aaebdb80eb1ec3201d7dd5d29bd20590c1b457a0b3b8c1e12c18"
+      "bytes": 30400,
+      "sha256": "9642f950386dd1ccb4a669b87cb944194aabc35265ef5195da55500a16ef660a"
     },
     {
       "path": "examples/showcase/examples/search-scan/search-scan-timeline.js",
-      "bytes": 6928,
-      "sha256": "e1506e6641b6b46b6efa3b511af1b4c633232aed5168862c5075275318bc0dbb"
+      "bytes": 7016,
+      "sha256": "aded2c005ee45d6bfce01e083585632578a689ecd494e0bfb3498a40dabc0623"
     },
     {
       "path": "examples/showcase/examples/search-scan/search-scan.css",
@@ -310,8 +315,8 @@
     },
     {
       "path": "examples/showcase/examples/search-scan/search-scan.js",
-      "bytes": 20910,
-      "sha256": "b79cbbf57c20049517daafc23a93efcf5e7fdafae91dcb93c4c26bdae504f82b"
+      "bytes": 20973,
+      "sha256": "f1b0b53e3a891cb8aeb2abd0be4952653a8fa5c0a40e34942d11a79bc590cf77"
     },
     {
       "path": "examples/showcase/index.html",
@@ -430,8 +435,8 @@
     },
     {
       "path": "scripts/run-tests.mjs",
-      "bytes": 1780,
-      "sha256": "4b5fbd6926e1a2f9ae5bd31a1389d99bc1ba7dc486228bd7ac4203d1970d8a89"
+      "bytes": 1848,
+      "sha256": "8dfd96b69e4b9b09c1605f7e00cae94318727ca99f66a444f15553d13de5a755"
     },
     {
       "path": "scripts/showcase-server.mjs",
@@ -684,6 +689,16 @@
       "sha256": "41bf79c668e485a82d63fd9cd17b75c863eecd26a27bb3650d7a22718e405279"
     },
     {
+      "path": "tests/browser/search-scan-canvas.test.mjs",
+      "bytes": 6704,
+      "sha256": "82860ee14ca327b7a186292c77dc030d1f86967bb5e0ec314ca78b783bac365e"
+    },
+    {
+      "path": "tests/browser/search-scan-contacts.test.mjs",
+      "bytes": 7091,
+      "sha256": "9822f00c8bf80c56def9bcafeacfb223d4a28fd76734482a004d90e9e32a29cb"
+    },
+    {
       "path": "tests/browser/search-scan-graphics.test.mjs",
       "bytes": 17673,
       "sha256": "665208c3630bb723d7fa43649de41511701ab7e0462767d1f765a670b416715a"
@@ -695,8 +710,8 @@
     },
     {
       "path": "tests/browser/search-scan-prefab.test.mjs",
-      "bytes": 13084,
-      "sha256": "4c20a15c32c2fcdb8f528dc43c7f5fc23765cdf0c12071e97a085a3687aabfbd"
+      "bytes": 21582,
+      "sha256": "1a845c63a57f27d4b3db152687cffb52694dec2254cf9efb437b47a702a05596"
     },
     {
       "path": "tests/browser/search-scan.test.mjs",
@@ -907,10 +922,10 @@
   ],
   "reviewed_exceptions": [],
   "review": {
-    "kind": "search-scan-playback-and-captured-graphics-recovery-source-delta",
+    "kind": "search-scan-nearest-node-leg-contact-and-response-source-delta",
     "reviewer": "assistant/root",
-    "public_base_revision": "353baeb3bee5f0938cf1d58872fca3a58690389b",
-    "previous_source_fingerprint_sha256": "2238065cac284e2730f67608bce4892f58078a60b7ea97f6009b655e6f23c360",
+    "public_base_revision": "3abec46c993c90f607373b05fc3fa2e49eb1c0fa",
+    "previous_source_fingerprint_sha256": "42e834468f3b7dfee052566b19bea9e3d24a2b463be82b02dd9663d6b955238b",
     "evidence": [
       "design-qa.md",
       "examples/showcase/examples/search-scan/README.md",
@@ -919,9 +934,9 @@
     "mechanical_checks": [
       "Complete physical source inventory equals the Git candidate; exact file hashes, no source symlinks or ignored ordinary files.",
       "Bounded credential and machine-path patterns scanned across source text and printable binary strings, with zero findings.",
-      "Full repository check passed 191 product tests and 108 example/tooling tests, including six actual-application playback regressions and sixteen graphics-observer tests.",
-      "Browser reproduced the published reduced-motion lock, then verified rebuilt Play animation, advancing replay, replay restart, and pause in Canvas mode.",
-      "Content-versioned import-map entries match the current main and observer module hashes; all six Pages tooling tests passed.",
+      "Full repository check passed 191 product tests and 122 example/tooling tests. New cases verify nearest targets, real geometry contacts, phase continuity, deterministic seeking, reactive halos, and resource ownership.",
+      "Browser verified changed hand positions and responsive node lights at 2.30 and 2.38 seconds and advancing playback in the rebuilt Canvas example.",
+      "Seven content-versioned local module entries match their SHA-256 prefixes; static Pages build completed with 183 files.",
       "All six existing media approvals match identical bytes; no media was added or replaced."
     ],
     "provenance_note": "This is a bounded delta review, not a rerun of the unavailable original sanitizer. Historical media approvals are carried forward only for identical bytes. No unseen checker or review-input hash is reused."

@@ -1,6 +1,13 @@
 import { createHeadlessForceGraph } from '@ours/forcegraph-tsl/headless';
 
-/** Canvas2D fallback for this prefab's primitives; it does not execute TSL or use GPU draws. */
+/**
+ * Canvas2D fallback for this prefab's primitives; it does not execute TSL or use GPU draws.
+ * A camera-facing NodeMaterial plane may declare
+ * material.userData.searchScanHalo = { color: 0x67d9c1, strength: 0.19 }.
+ * Color is 24-bit RGB and strength is 0..1. Its fixed UV profile is
+ * (1 - smoothstep(.04, .5, length(uv - .5)))²; material.opacity is the envelope.
+ * Untagged NodeMaterial planes retain the original marker halo approximation.
+ */
 export function createSearchScanCanvasHost({ THREE, canvas, scene, camera, model }) {
   if (!THREE?.Matrix4 || !canvas?.getContext || !scene?.isScene || !camera?.isPerspectiveCamera) throw new TypeError('Canvas2D fallback requires Three, a canvas, scene, and perspective camera.');
   const context = canvas.getContext('2d', { alpha: false });
@@ -113,6 +120,8 @@ export function createSearchScanCanvasHost({ THREE, canvas, scene, camera, model
     const geometry = object.geometry;
     const positions = geometry?.getAttribute('position');
     if (!positions) return;
+    const halo = material.isMeshBasicNodeMaterial && geometry.type === 'PlaneGeometry'
+      ? readHalo(material.userData?.searchScanHalo) : undefined;
     context.save();
     context.globalAlpha = material.opacity;
     context.globalCompositeOperation = material.blending === THREE.AdditiveBlending ? 'lighter' : 'source-over';
@@ -130,13 +139,22 @@ export function createSearchScanCanvasHost({ THREE, canvas, scene, camera, model
         context.beginPath(); context.moveTo(from.x, from.y); context.lineTo(to.x, to.y); context.stroke(); painted();
       }
     } else if (material.isMeshBasicNodeMaterial && geometry.type === 'PlaneGeometry') {
-      // The marker's UV halo is the only shader approximation in this host.
+      // Shared marker/contact geometry; only its radial shader is approximated.
       const corners = [0, 1, 3, 2].map(index => vertex(object, positions, index));
       if (corners.every(Boolean)) {
         const x = (corners[0].x + corners[2].x) / 2, y = (corners[0].y + corners[2].y) / 2;
         const radius = Math.max(0.01, Math.hypot(corners[1].x - corners[0].x, corners[1].y - corners[0].y) / 2);
         const gradient = context.createRadialGradient(x, y, 0, x, y, radius);
-        gradient.addColorStop(0, 'rgba(103,217,193,.19)'); gradient.addColorStop(0.35, 'rgba(103,217,193,.09)'); gradient.addColorStop(1, 'rgba(103,217,193,0)');
+        if (halo) {
+          const rgb = `${(halo.color >>> 16) & 255},${(halo.color >>> 8) & 255},${halo.color & 255}`;
+          for (const radius of [0, 0.08, 0.2, 0.35, 0.5, 0.65, 0.8, 0.9, 1]) {
+            const t = Math.max(0, Math.min(1, (radius * 0.5 - 0.04) / 0.46));
+            const alpha = halo.strength * (1 - t * t * (3 - 2 * t)) ** 2;
+            gradient.addColorStop(radius, `rgba(${rgb},${alpha.toFixed(6)})`);
+          }
+        } else {
+          gradient.addColorStop(0, 'rgba(103,217,193,.19)'); gradient.addColorStop(0.35, 'rgba(103,217,193,.09)'); gradient.addColorStop(1, 'rgba(103,217,193,0)');
+        }
         context.fillStyle = gradient; context.beginPath(); path(corners); context.fill(); painted();
       }
     } else {
@@ -215,4 +233,14 @@ export function createSearchScanCanvasHost({ THREE, canvas, scene, camera, model
   };
   try { accept(model); } catch (error) { owner.dispose(); throw error; }
   return { graph, renderer };
+}
+
+function readHalo(value) {
+  if (value === undefined) return undefined;
+  if (value === null || typeof value !== 'object' || Array.isArray(value)
+    || !Number.isInteger(value.color) || value.color < 0 || value.color > 0xffffff
+    || !Number.isFinite(value.strength) || value.strength < 0 || value.strength > 1) {
+    throw new TypeError('Canvas2D searchScanHalo requires a 24-bit RGB color and strength between 0 and 1.');
+  }
+  return { color: value.color, strength: value.strength };
 }

@@ -205,6 +205,22 @@ dimming. Recheck the whole composition after a regional correction.
 - Test cleanup and browser restoration behavior where relevant. Preserve the
   distinction between pausing a cached page and disposing a destroyed page.
 
+## Verify contact and response across frames
+
+When a reference shows a scanner touching graph nodes, record the event sequence:
+approach, exact contact, target illumination, and release. Compare nearby frames
+around that event so a decorative waving line cannot stand in for an interaction.
+Keep the selected node ID stable during the touch, transform its accepted world
+position into the moving marker's coordinates, and inspect the actual rendered
+endpoint. Check camera rotation and scale as well as the default view.
+
+Sample the contact and fade from absolute time so seeking or skipped frames
+preserve the visible response. Check fast body motion and scan boundaries for
+premature extension, interrupted holds, and stale lights. Verify that reduced
+motion, overview, and an empty result clear the contacts. Shared scene geometry
+can keep the contact positions consistent across renderers; shader opacity and
+its fallback approximation still need separate checks.
+
 ## Clone Jutsu routing: proposed lesson, not a receipt
 
 The supplied working vocabulary is **capture → mechanical gate →

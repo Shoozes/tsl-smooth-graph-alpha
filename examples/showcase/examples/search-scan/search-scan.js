@@ -320,6 +320,7 @@ function frame(timestamp) {
     canvas.dataset.group = sample.groupId ?? '';
     canvas.dataset.playing = String(playing);
     canvas.dataset.renderedFrames = String(renderedFrames);
+    canvas.dataset.contactCount = String(prefab.contactCount);
     const stateKey = `${sample.phase}:${sample.groupId}:${sample.activeNodeId}`;
     if (lastPhase !== stateKey) {
       lastPhase = stateKey;

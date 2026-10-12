@@ -11,6 +11,8 @@ const exampleTests = [
   'dynamic-routes.test.mjs',
   'node-spawn-motion.test.mjs',
   'responsive-framing.test.mjs',
+  'search-scan-canvas.test.mjs',
+  'search-scan-contacts.test.mjs',
   'search-scan-prefab.test.mjs',
   'search-scan-graphics.test.mjs',
   'search-scan-playback.test.mjs',

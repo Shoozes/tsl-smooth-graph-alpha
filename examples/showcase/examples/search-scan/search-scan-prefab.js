@@ -1,6 +1,7 @@
 import { planPerspectiveCameraFocus, planPerspectiveCameraFrame, sampleCameraPoseTween } from '@ours/forcegraph-tsl/camera';
 import { planLabelVisibility } from '@ours/forcegraph-tsl/labels';
 import { createSearchScanTimeline } from './search-scan-timeline.js';
+import { createSearchScanContacts, SEARCH_SCAN_LEG_COUNT } from './search-scan-contacts.js';
 
 /** Host-owned presentation. Borrows the graph, scene, camera and Three modules. */
 export function createSearchScanPrefab({ THREE, TSL, graph, scene, camera, labelLayer, model, travelMs = 300, overviewMs = 1500 } = {}) {
@@ -16,6 +17,7 @@ export function createSearchScanPrefab({ THREE, TSL, graph, scene, camera, label
   let visibleLabels = 0;
   let lastSample;
   let resultIds = validated.resultIds;
+  const contacts = createSearchScanContacts({ nodes: model.nodes, sampleAnchor, getNodePosition: position });
   const projection = new THREE.Vector3();
   const labels = new Map();
   const releases = [];
@@ -101,6 +103,16 @@ export function createSearchScanPrefab({ THREE, TSL, graph, scene, camera, label
     return point;
   }
 
+  function markerScale(groupId) {
+    return Math.max(0.65, Math.min(1.8, (groups.get(groupId)?.radius ?? 25) / 25));
+  }
+
+  function sampleAnchor(timeMs) {
+    const sample = timeline.sample(timeMs);
+    const cursor = sampleCursor(sample, false);
+    return cursor && { phase: sample.phase, groupId: sample.groupId, nodeDurationMs: sample.nodeDurationMs, scale: markerScale(sample.groupId), center: { x: cursor.x, y: cursor.y, z: cursor.z + 2 } };
+  }
+
   function cameraPose(sample, cursor) {
     if (sample.phase === 'overview' || sample.phase === 'complete') {
       return sampleCameraPoseTween({ from: focusPose(sample.groupId, cursor), to: overviewPose(), durationMs: 1, easing: 'cubic-in-out' }, sample.overviewProgress);
@@ -172,6 +184,7 @@ export function createSearchScanPrefab({ THREE, TSL, graph, scene, camera, label
 
   return Object.freeze({
     get durationMs() { return timeline.durationMs; },
+    get contactCount() { return marker.contactCount; },
     resize(nextWidth, nextHeight) {
       if (disposed) return;
       if (!Number.isFinite(nextWidth) || !Number.isFinite(nextHeight) || nextWidth <= 0 || nextHeight <= 0 || !Number.isFinite(nextWidth / nextHeight) || nextWidth / nextHeight <= 0) throw new RangeError('Viewport dimensions and aspect must be positive and finite.');
@@ -186,6 +199,7 @@ export function createSearchScanPrefab({ THREE, TSL, graph, scene, camera, label
       for (const step of steps) for (const id of step.nodeIds) readGraphPosition(graph, id);
       timeline = next;
       resultIds = nextResults;
+      contacts.reset();
       return timeline.durationMs;
     },
     render(elapsedMs, { followCamera = true, reducedMotion = false, overview = false } = {}) {
@@ -200,21 +214,24 @@ export function createSearchScanPrefab({ THREE, TSL, graph, scene, camera, label
       marker.group.visible = cursor !== null;
       if (cursor) {
         marker.group.position.set(cursor.x, cursor.y, cursor.z + 2);
-        marker.group.scale.setScalar(Math.max(0.65, Math.min(1.8, (groups.get(sample.groupId)?.radius ?? 25) / 25)));
+        marker.group.scale.setScalar(markerScale(sample.groupId));
         marker.group.quaternion.copy(camera.quaternion);
-        marker.update(reducedMotion ? 0 : sample.timeMs / 1000, sample.phase === 'travel' ? sample.phaseProgress : 0);
-      }
+        marker.group.updateWorldMatrix(true, false);
+        marker.update(reducedMotion ? 0 : sample.timeMs / 1000, contacts.sample(sample, { reducedMotion, overview }));
+      } else marker.clear();
       travel.update(position(sample.fromNodeId), cursor, sample.phase === 'travel' && !reducedMotion ? sample.phaseProgress : null);
       renderLabels(sample);
       lastSample = sample;
       return sample;
     },
     inspect() {
-      return { disposed, visibleLabels, durationMs: timeline.durationMs, sample: lastSample, ownedObjects: disposed ? 0 : 3, labelCapacity: labels.size };
+      return { disposed, visibleLabels, durationMs: timeline.durationMs, sample: lastSample, scanner: marker.inspect(), ownedObjects: disposed ? 0 : 3, labelCapacity: labels.size };
     },
     dispose() {
       if (disposed) return;
       disposed = true;
+      marker.clear();
+      contacts.reset();
       releaseOwned();
     }
   });
@@ -231,54 +248,124 @@ function createMarker(THREE, TSL, own) {
     return object;
   }
   const material = (color, opacity = 1) => own(new THREE.MeshBasicMaterial({ color, opacity, transparent: opacity < 1, depthTest: false, depthWrite: false, side: THREE.DoubleSide }));
-  const haloMaterial = own(new THREE.MeshBasicNodeMaterial({ transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending }));
-  haloMaterial.colorNode = TSL.color(0x67d9c1);
-  haloMaterial.opacityNode = TSL.float(1).sub(TSL.smoothstep(0.04, 0.5, TSL.uv().sub(0.5).length())).pow(2).mul(0.19);
-  mesh(own(new THREE.PlaneGeometry(19, 19)), haloMaterial, 10);
+  function halo(color, strength) {
+    const value = own(new THREE.MeshBasicNodeMaterial({ transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending }));
+    value.userData.searchScanHalo = { color, strength };
+    value.colorNode = TSL.color(color);
+    value.opacityNode = TSL.float(1).sub(TSL.smoothstep(0.04, 0.5, TSL.uv().sub(0.5).length())).pow(2).mul(strength).mul(TSL.materialOpacity);
+    return value;
+  }
+  mesh(own(new THREE.PlaneGeometry(19, 19)), halo(0x67d9c1, 0.19), 10);
   mesh(own(new THREE.CircleGeometry(2.2, 56)), material(0x061719, 0.96), 12);
   mesh(own(new THREE.RingGeometry(2.2, 2.27, 64)), material(0x67d9c1, 0.86), 13);
   const core = mesh(own(new THREE.PlaneGeometry(0.92, 0.92)), material(0xed4d91), 15);
   core.rotation.z = 0.28;
-  const rays = 30;
-  const segments = 10;
+  const rays = SEARCH_SCAN_LEG_COUNT;
+  const segments = 14;
   const positions = new Float32Array(rays * segments * 6);
   const colors = new Float32Array(positions.length);
   const teal = new THREE.Color(0x67d9c1);
-  for (let ray = 0; ray < rays; ray += 1) for (let s = 0; s < segments; s += 1) {
-    const intensity = (1 - s / segments * 0.86) * (0.5 + noise(ray * 7.1) * 0.5);
-    for (let endpoint = 0; endpoint < 2; endpoint += 1) {
-      const offset = (ray * segments * 2 + s * 2 + endpoint) * 3;
-      colors[offset] = teal.r * intensity;
-      colors[offset + 1] = teal.g * intensity;
-      colors[offset + 2] = teal.b * intensity;
-    }
-  }
   const geometry = own(new THREE.BufferGeometry());
   geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage));
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  const lineMaterial = own(new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.82, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending }));
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3).setUsage(THREE.DynamicDrawUsage));
+  const lineMaterial = own(new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.88, linewidth: 1, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending }));
   const lines = new THREE.LineSegments(geometry, lineMaterial);
+  lines.name = 'search-scan-legs';
   lines.frustumCulled = false;
   lines.renderOrder = 14;
   group.add(lines);
+  const tipGeometry = own(new THREE.CircleGeometry(0.12, 12));
+  const contactGeometry = own(new THREE.PlaneGeometry(1, 1));
+  const haloGeometry = own(new THREE.PlaneGeometry(2, 2));
+  const ringGeometry = own(new THREE.RingGeometry(0.68, 0.76, 28));
+  const effects = Array.from({ length: rays }, (_, index) => {
+    const tip = mesh(tipGeometry, material(0x96eed8, 0.92), 17);
+    tip.name = `search-scan-hand-${index}`;
+    const light = mesh(contactGeometry, material(0xdbfff0, 0), 16);
+    const glow = mesh(haloGeometry, halo(0x7affcf, 0.62), 11);
+    const ring = mesh(ringGeometry, material(0x8affd7, 0), 16);
+    light.name = `search-scan-contact-${index}`;
+    glow.visible = light.visible = ring.visible = false;
+    return { tip, light, glow, ring };
+  });
+  const inverse = new THREE.Matrix4();
+  const target = new THREE.Vector3();
+  const worldTip = new THREE.Vector3();
+  let lastLegs = [];
   return {
     group,
-    update(time, traveling) {
-      for (let ray = 0; ray < rays; ray += 1) {
-        const base = ray / rays * Math.PI * 2;
-        const length = 4.1 + noise(ray + 19) * 5.3;
-        const wave = Math.sin(time * (0.72 + noise(ray + 3) * 0.5) + ray * 2.7);
+    get contactCount() { return lastLegs.filter(leg => leg.touching).length; },
+    clear() {
+      lastLegs = [];
+      for (const effect of effects) effect.glow.visible = effect.light.visible = effect.ring.visible = false;
+    },
+    inspect() {
+      return { legCount: rays, contactCount: lastLegs.filter(leg => leg.touching).length, legs: lastLegs.map(leg => ({ ...leg, worldTip: { ...leg.worldTip }, targetPosition: leg.targetPosition && { ...leg.targetPosition } })) };
+    },
+    update(time, legs) {
+      inverse.copy(group.matrixWorld).invert();
+      const scale = group.scale.x;
+      lastLegs = [];
+      for (const leg of legs) {
+        const ray = leg.legId;
+        const base = leg.angle;
+        const wave = Math.sin(time * 5 + ray * 2.7);
+        const homeAngle = base + wave * 0.12;
+        const homeRadius = leg.restRadius * 0.6 + Math.sin(time * 6.5 + ray) * 0.35;
+        const home = { x: Math.cos(homeAngle) * homeRadius, y: Math.sin(homeAngle) * homeRadius, z: 0.18 };
+        if (leg.targetPosition) target.set(leg.targetPosition.x, leg.targetPosition.y, leg.targetPosition.z).applyMatrix4(inverse);
+        else target.set(home.x, home.y, home.z);
+        const tip = mix(home, target, leg.reach);
+        const lift = Math.sin(Math.PI * leg.reach) * (leg.phase === 'retract' ? -1 : 1);
+        tip.x -= Math.sin(base) * lift * 0.95;
+        tip.y += Math.cos(base) * lift * 0.95;
+        tip.z += Math.abs(lift) * 0.8;
+        const tipDistance = Math.hypot(tip.x, tip.y, tip.z);
+        if (!leg.touching && tipDistance > 15) {
+          for (const axis of ['x', 'y', 'z']) tip[axis] *= 15 / tipDistance;
+        }
+        const root = { x: Math.cos(base) * 2.25, y: Math.sin(base) * 2.25, z: 0.06 };
+        const reach = Math.hypot(tip.x - root.x, tip.y - root.y);
+        const elbow = {
+          x: Math.cos(base + wave * 0.18) * (2.25 + reach * 0.46),
+          y: Math.sin(base + wave * 0.18) * (2.25 + reach * 0.46), z: 0.45 + Math.abs(lift)
+        };
+        const wrist = mix(root, tip, 0.78);
+        wrist.x -= Math.sin(base) * (wave * 0.65 + lift);
+        wrist.y += Math.cos(base) * (wave * 0.65 + lift);
+        wrist.z += 0.35 + Math.abs(lift) * 0.5;
         for (let s = 0; s < segments; s += 1) for (let endpoint = 0; endpoint < 2; endpoint += 1) {
           const t = (s + endpoint) / segments;
-          const radius = 2.25 + t * length * (1 + Math.sin(Math.PI * traveling) * 0.16);
-          const angle = base + t * t * wave * 0.29 + Math.sin(t * 3.8 + time * 0.8 + ray) * 0.09 * t;
+          const u = 1 - t;
           const offset = (ray * segments * 2 + s * 2 + endpoint) * 3;
-          positions[offset] = Math.cos(angle) * radius;
-          positions[offset + 1] = Math.sin(angle) * radius;
-          positions[offset + 2] = 0.06;
+          positions[offset] = u ** 3 * root.x + 3 * u ** 2 * t * elbow.x + 3 * u * t ** 2 * wrist.x + t ** 3 * tip.x;
+          positions[offset + 1] = u ** 3 * root.y + 3 * u ** 2 * t * elbow.y + 3 * u * t ** 2 * wrist.y + t ** 3 * tip.y;
+          positions[offset + 2] = u ** 3 * root.z + 3 * u ** 2 * t * elbow.z + 3 * u * t ** 2 * wrist.z + t ** 3 * tip.z;
+          const intensity = 0.78 - t * 0.4 + leg.contactStrength * t * 0.65;
+          colors[offset] = teal.r * intensity;
+          colors[offset + 1] = teal.g * intensity;
+          colors[offset + 2] = teal.b * intensity;
         }
+        const effect = effects[ray];
+        effect.tip.position.set(tip.x, tip.y, tip.z);
+        effect.tip.material.color.setHex(leg.touching ? 0xe5fff2 : 0x96eed8);
+        effect.tip.scale.setScalar(leg.touching ? 1.5 : 1);
+        const lit = leg.contactStrength > 0 && leg.targetPosition !== null;
+        effect.glow.visible = effect.light.visible = effect.ring.visible = lit;
+        if (lit) {
+          for (const object of [effect.glow, effect.light, effect.ring]) object.position.copy(target);
+          effect.light.scale.setScalar(Math.max(0.38, leg.nodeRadius * 2.3) / scale);
+          effect.light.material.opacity = leg.contactStrength;
+          effect.glow.scale.setScalar(Math.max(1.8, leg.nodeRadius * 5.5) / scale);
+          effect.glow.material.opacity = leg.contactStrength;
+          effect.ring.scale.setScalar((1 + leg.contactProgress * 1.15) / scale);
+          effect.ring.material.opacity = leg.contactStrength * 0.68;
+        }
+        worldTip.set(tip.x, tip.y, tip.z).applyMatrix4(group.matrixWorld);
+        lastLegs.push({ ...leg, worldTip: { x: worldTip.x, y: worldTip.y, z: worldTip.z } });
       }
       geometry.attributes.position.needsUpdate = true;
+      geometry.attributes.color.needsUpdate = true;
     }
   };
 }
@@ -346,12 +433,13 @@ function validateInputs({ THREE, TSL, graph, scene, camera, labelLayer, model, t
   }
   const document = labelLayer?.ownerDocument ?? globalThis.document;
   if (typeof labelLayer?.append !== 'function' || typeof document?.createElement !== 'function') throw new TypeError('Search scan requires a DOM label layer.');
-  for (const name of ['Vector3', 'Group', 'Mesh', 'Color', 'PlaneGeometry', 'CircleGeometry', 'RingGeometry', 'BufferGeometry', 'BufferAttribute', 'Float32BufferAttribute', 'MeshBasicMaterial', 'MeshBasicNodeMaterial', 'LineBasicMaterial', 'LineSegments']) {
+  for (const name of ['Vector3', 'Matrix4', 'Group', 'Mesh', 'Color', 'PlaneGeometry', 'CircleGeometry', 'RingGeometry', 'BufferGeometry', 'BufferAttribute', 'Float32BufferAttribute', 'MeshBasicMaterial', 'MeshBasicNodeMaterial', 'LineBasicMaterial', 'LineSegments']) {
     if (typeof THREE?.[name] !== 'function') throw new TypeError(`Search scan requires injected THREE.${name}.`);
   }
   for (const name of ['color', 'float', 'smoothstep', 'uv']) {
     if (typeof TSL?.[name] !== 'function') throw new TypeError(`Search scan requires injected TSL.${name}.`);
   }
+  if (!TSL.materialOpacity?.isNode) throw new TypeError('Search scan requires injected TSL.materialOpacity.');
   if (!isRecord(model) || !Array.isArray(model.groups) || !Array.isArray(model.nodes) || !Array.isArray(model.links)) {
     throw new TypeError('Search scan model requires groups, nodes, and links arrays.');
   }
@@ -384,7 +472,8 @@ function validateInputs({ THREE, TSL, graph, scene, camera, labelLayer, model, t
       if (++labelCount > 512) throw new RangeError('Search scan supports at most 512 presentation labels.');
     }
     if (node.data.annotation !== undefined) validateText(node.data.annotation, `node ${node.id} annotation`, true);
-    const data = Object.freeze({ groupId: node.data.groupId, color: node.data.color, label: node.data.label, annotation: node.data.annotation });
+    if (node.data.radius !== undefined && (!Number.isFinite(node.data.radius) || node.data.radius < 0 || node.data.radius > 100)) throw new TypeError(`Search scan node ${node.id} radius must be finite and between 0 and 100.`);
+    const data = Object.freeze({ groupId: node.data.groupId, color: node.data.color, radius: node.data.radius ?? 0.18, label: node.data.label, annotation: node.data.annotation });
     return Object.freeze({ id: node.id, data, initialPosition: readGraphPosition(graph, node.id) });
   });
   const nodeMap = new Map(nodes.map((node) => [node.id, node]));
@@ -471,4 +560,3 @@ function isRecord(value) { return value !== null && typeof value === 'object' &&
 function labelKey(kind, id) { return JSON.stringify([kind, id]); }
 function mix(a, b, t) { return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, z: a.z + (b.z - a.z) * t }; }
 function hex(value) { return `#${(Number(value) >>> 0).toString(16).padStart(6, '0').slice(-6)}`; }
-function noise(value) { const n = Math.sin(value * 127.1 + 31.7) * 43758.5453; return n - Math.floor(n); }

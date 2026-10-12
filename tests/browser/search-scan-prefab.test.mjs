@@ -171,6 +171,182 @@ test('revisited active groups show revealing and snapshot caller presentation me
   prefab.dispose();
 });
 
+test('scanner lines, hands and contact lights meet live nodes under camera rotation, translation and scale', () => {
+  const host = makeHost(contactModel());
+  const beforeModel = structuredClone(host.model);
+  const prefab = host.create();
+  prefab.resize(900, 600);
+  host.camera.position.set(80, 55, 120);
+  host.camera.lookAt(17, -9, 4);
+  prefab.render(104, { followCamera: false });
+  const marker = host.scene.getObjectByName('search-scan-marker');
+  const lines = host.scene.getObjectByName('search-scan-legs');
+  assert.equal(marker.scale.x, 1.4);
+  const approach = prefab.inspect().scanner.legs[0];
+  assert.equal(approach.phase, 'reach');
+  assert.ok(new THREE.Vector3(approach.worldTip.x, approach.worldTip.y, approach.worldTip.z)
+    .distanceTo(new THREE.Vector3().copy(approach.targetPosition)) > 0.1);
+  assert.equal(host.scene.getObjectByName('search-scan-contact-0').visible, false);
+
+  prefab.render(260, { followCamera: false });
+  const firstContact = prefab.inspect().scanner;
+  const firstMarkerZ = marker.position.z;
+  assert.ok(firstContact.contactCount > 0);
+  assert.equal(firstContact.legCount, 24);
+  assertWorldContacts();
+  const targetId = firstContact.legs[0].targetNodeId;
+  const target = host.positions.get(targetId);
+  target.x += 0.8; target.y -= 0.3; target.z += 0.5;
+  host.positions.get('anchor').x += 1;
+  host.camera.position.set(-60, 40, 75);
+  host.camera.lookAt(18, -9, 4);
+  prefab.render(260, { followCamera: false });
+  assert.equal(prefab.inspect().scanner.legs[0].targetNodeId, targetId);
+  assert.equal(marker.position.x, 18);
+  assert.equal(marker.position.z, firstMarkerZ, 'The existing scan bend is unchanged at the same timestamp.');
+  assertWorldContacts();
+
+  prefab.render(416, { followCamera: false });
+  const retracted = prefab.inspect().scanner.legs[0];
+  assert.equal(retracted.phase, 'retract');
+  assert.ok(new THREE.Vector3().copy(retracted.worldTip).distanceTo(new THREE.Vector3().copy(target)) > 0.1);
+  const fadingLight = host.scene.getObjectByName('search-scan-contact-0');
+  assert.equal(fadingLight.visible, true);
+  assert.ok(fadingLight.material.opacity > 0 && fadingLight.material.opacity < 1);
+  assert.ok(fadingLight.getWorldPosition(new THREE.Vector3()).distanceTo(new THREE.Vector3().copy(target)) < 1e-9);
+  assert.deepEqual(host.model, beforeModel, 'Presentation contacts do not change the input graph data.');
+  prefab.dispose();
+
+  function assertWorldContacts() {
+    host.scene.updateMatrixWorld(true);
+    const scanner = prefab.inspect().scanner;
+    const touching = scanner.legs.filter(leg => leg.touching);
+    assert.ok(touching.length > 0);
+    assert.equal(scanner.contactCount, touching.length);
+    for (const leg of touching) {
+      const target = new THREE.Vector3().copy(host.positions.get(leg.targetNodeId));
+      const renderedEndpoint = new THREE.Vector3()
+        .fromBufferAttribute(lines.geometry.getAttribute('position'), leg.legId * 28 + 27)
+        .applyMatrix4(lines.matrixWorld);
+      assert.ok(renderedEndpoint.distanceTo(target) < 1e-5, `Float32 leg ${leg.legId} endpoint contacts its node.`);
+      assert.ok(new THREE.Vector3().copy(leg.worldTip).distanceTo(target) < 1e-9);
+      const hand = host.scene.getObjectByName(`search-scan-hand-${leg.legId}`);
+      const light = host.scene.getObjectByName(`search-scan-contact-${leg.legId}`);
+      assert.ok(hand.getWorldPosition(new THREE.Vector3()).distanceTo(target) < 1e-9);
+      assert.equal(light.visible, true);
+      assert.ok(light.getWorldPosition(new THREE.Vector3()).distanceTo(target) < 1e-9);
+      assert.equal(light.material.opacity, leg.contactStrength);
+    }
+  }
+});
+
+test('scanner contacts seek deterministically and clear through overview, reduction, replacement and disposal', () => {
+  const host = makeHost(contactModel());
+  const prefab = host.create();
+  prefab.resize(900, 600);
+  prefab.render(260);
+  const contact = prefab.inspect().scanner;
+  assert.ok(contact.contactCount > 0);
+  prefab.render(1_400);
+  prefab.render(260);
+  assert.deepEqual(prefab.inspect().scanner, contact);
+  for (const options of [{ overview: true }, { reducedMotion: true }]) {
+    prefab.render(260, options);
+    assertNoContactLights();
+    prefab.render(260);
+    assert.deepEqual(prefab.inspect().scanner, contact);
+  }
+  prefab.setSequence([], { resultNodeIds: [] });
+  prefab.render(0);
+  assertNoContactLights();
+  assert.equal(host.scene.getObjectByName('search-scan-marker').visible, false);
+  prefab.setSequence(host.model.steps, { resultNodeIds: host.model.resultNodeIds });
+  prefab.render(260);
+  assert.deepEqual(prefab.inspect().scanner, contact);
+  prefab.dispose();
+  assert.equal(prefab.inspect().scanner.contactCount, 0);
+  assert.deepEqual(host.scene.children, [host.borrowedObject]);
+  assert.ok(host.resources.every(resource => resource.disposals === 1), 'Shared contact resources are released exactly once.');
+  assert.equal(host.graphDisposals, 0);
+
+  function assertNoContactLights() {
+    const scanner = prefab.inspect().scanner;
+    assert.equal(scanner.contactCount, 0);
+    assert.ok(scanner.legs.every(leg => !leg.touching && leg.contactStrength === 0 && leg.targetNodeId === null));
+    for (let index = 0; index < scanner.legCount; index += 1) {
+      assert.equal(host.scene.getObjectByName(`search-scan-contact-${index}`).visible, false);
+    }
+  }
+});
+
+test('actual fixture scan boundaries begin with retracted hands instead of partial-cycle extensions', (t) => {
+  const fixture = buildSearchScanFixture({ pointsPerGroup: 900 });
+  const host = makeHost(fixture);
+  const prefab = host.create();
+  t.after(() => prefab.dispose());
+  prefab.resize(900, 600);
+  let time = 0;
+  for (const step of fixture.steps) {
+    prefab.render(time);
+    const scanner = prefab.inspect().scanner;
+    assert.equal(scanner.contactCount, 0, `${step.groupId} starts without a planted hand.`);
+    for (const leg of scanner.legs) {
+      assert.equal(leg.reach, 0, `${step.groupId} leg ${leg.legId} cannot enter with an already extended hand.`);
+      assert.ok(leg.phase === 'idle' || leg.phase === 'reach');
+    }
+    time += step.durationMs + 300;
+  }
+});
+
+test('fast actual-fixture scans keep touching hands planted throughout each feasible hold', (t) => {
+  const fixture = buildSearchScanFixture({ pointsPerGroup: 900 });
+  const host = makeHost(fixture);
+  const prefab = host.create();
+  t.after(() => prefab.dispose());
+  prefab.resize(900, 600);
+  const planted = new Map();
+  const observed = new Set();
+  for (let time = 0; time < fixture.steps[0].durationMs; time += 2) {
+    prefab.render(time);
+    const scanner = prefab.inspect().scanner;
+    for (const leg of scanner.legs) {
+      const hold = planted.get(leg.legId);
+      if (hold && time < hold.endMs - 1e-6) {
+        assert.equal(leg.touching, true, `Leg ${leg.legId} must not drop its planted contact at ${time}ms.`);
+        assert.equal(leg.targetNodeId, hold.targetNodeId);
+      } else planted.delete(leg.legId);
+      if (leg.touching && leg.contactProgress > 0) {
+        const endMs = leg.contactStartMs + (time - leg.contactStartMs) / leg.contactProgress;
+        assert.ok(Number.isFinite(endMs) && endMs >= time - 1e-6);
+        planted.set(leg.legId, { endMs, targetNodeId: leg.targetNodeId });
+        observed.add(`${leg.legId}:${leg.contactStartMs}`);
+        assert.ok(new THREE.Vector3().copy(leg.worldTip)
+          .distanceTo(new THREE.Vector3().copy(host.positions.get(leg.targetNodeId))) < 1e-5);
+      }
+    }
+  }
+  assert.ok(observed.size > 0, 'The real fixture must produce contacts; all-idle motion is not a valid repair.');
+});
+
+function contactModel() {
+  const center = { x: 17, y: -9, z: 4 };
+  const color = 0x67d9c1;
+  const nodes = [{ id: 'anchor', initialPosition: { ...center }, data: { groupId: 'a', color, radius: 0.4, label: 'anchor', kind: 'word' } }];
+  for (let index = 0; index < 24; index += 1) {
+    const angle = index / 24 * Math.PI * 2;
+    nodes.push({
+      id: `point-${index}`,
+      initialPosition: { x: center.x + Math.cos(angle) * 12, y: center.y + Math.sin(angle) * 12, z: center.z + Math.sin(angle) },
+      data: { groupId: 'a', color, radius: 0.25, kind: 'point' }
+    });
+  }
+  return {
+    nodes, links: [], groups: [{ id: 'a', label: 'A', color, center, radius: 35, nodeIds: ['anchor'] }],
+    steps: [{ groupId: 'a', nodeIds: ['anchor'], durationMs: 1_600 }], resultNodeIds: [],
+    bounds: { min: { x: -20, y: -45, z: -5 }, max: { x: 55, y: 30, z: 15 } }
+  };
+}
+
 function makeHost(model = simpleModel()) {
   const resources = [];
   const injected = { ...THREE };
