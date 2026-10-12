@@ -107,9 +107,18 @@ For an existing renderer/scene/camera, use the embedded recipe in
 The [gallery](examples/showcase/) demonstrates basic layout, communities,
 immutable expansion, materials, flow, camera travel, a 1,000-node scene,
 host-owned Bloom, pin/release behavior, and Worker-backed dynamic patches.
+[Search scan](examples/showcase/examples/search-scan/README.md) adds a reusable
+clustered search replay: deterministic seeking, travelling scanner filaments,
+progressive labels, and camera handoffs, with an explicit Canvas fallback.
+[The video-reference workflow](docs/VIDEO_REFERENCE_WORKFLOW.md) records the
+contact-sheet, timestamp, reconstruction, and verification lessons behind it.
 [Corpus Atlas](examples/corpus/) explores a checked-in synthetic metadata
 manifest through search, focus, and camera replay. Both examples retain the
 Vector Relay presentation.
+
+`pnpm run build:pages` produces a self-contained static demo artifact using
+the installed Three version. [Deployment](docs/DEPLOYMENT.md) covers local
+preview, GitHub Pages setup, project-subpath routing, and backend limitations.
 
 The graph is a reusable math/layout/rendering library. Retrieval, language
 contracts, document ingestion, and knowledge-exploration application behavior
@@ -131,6 +140,15 @@ only the staged README with the consumer guide, and writes a fingerprint-bound
 archive receipt beside the output. Run `pnpm run build` first. Output stays
 outside the source tree and existing archives are preserved. Registry
 publication remains a separate release action.
+
+Verify the actual archive from an isolated consumer:
+
+```sh
+pnpm run verify:package -- ../forcegraph-package/ours-forcegraph-tsl-0.3.0-alpha.1.tgz
+```
+
+See [package exports and publication](docs/PACKAGE_EXPORTS.md) for the eight
+stable entry points, consumer checks, and the remaining registry setup.
 
 The checks cover public API/ownership behavior and bounded Node example/server
 tests. GPU and visual behavior require a real browser; see

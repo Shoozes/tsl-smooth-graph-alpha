@@ -11,9 +11,11 @@ const exampleTests = [
   'dynamic-routes.test.mjs',
   'node-spawn-motion.test.mjs',
   'responsive-framing.test.mjs',
+  'search-scan-prefab.test.mjs',
+  'search-scan.test.mjs',
   'static-server.test.mjs'
 ].map((name) => `tests/browser/${name}`);
-const toolingTests = ['tests/tooling/task-menu.test.mjs', 'tests/tooling/package-readme.test.mjs', 'tests/tooling/package-review.test.mjs'];
+const toolingTests = ['tests/tooling/task-menu.test.mjs', 'tests/tooling/package-readme.test.mjs', 'tests/tooling/package-review.test.mjs', 'tests/tooling/pages-build.test.mjs'];
 const args = process.argv.slice(2);
 if (args.length > 1 || (args.length === 1 && args[0] !== '--examples')) {
   throw new Error('Use node scripts/run-tests.mjs [--examples].');

@@ -2,6 +2,19 @@
   "name": "@ours/forcegraph-tsl",
   "version": "0.3.0-alpha.1",
   "description": "Headless deterministic force graphs with an injected Three.js and TSL rendering adapter.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shoozes/tsl-smooth-graph-alpha.git"
+  },
+  "homepage": "https://github.com/Shoozes/tsl-smooth-graph-alpha#readme",
+  "bugs": {
+    "url": "https://github.com/Shoozes/tsl-smooth-graph-alpha/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "alpha",
+    "registry": "https://registry.npmjs.org/"
+  },
   "type": "module",
   "packageManager": "pnpm@11.19.0",
   "sideEffects": false,
@@ -53,7 +66,9 @@
     "check:docs": "node scripts/check-docs.mjs",
     "check": "npm run typecheck && npm run test && npm run check:docs",
     "showcase": "npm run build && node scripts/showcase-server.mjs",
-    "pack:release": "node scripts/pack.mjs"
+    "pack:release": "node scripts/pack.mjs",
+    "verify:package": "node scripts/verify-package.mjs",
+    "build:pages": "npm run build && node scripts/build-pages.mjs"
   },
   "peerDependencies": {
     "three": "^0.185.0"

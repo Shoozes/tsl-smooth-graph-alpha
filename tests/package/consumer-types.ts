@@ -1,0 +1,33 @@
+import { createForceGraph3D, createThreePlatform, NodeFlags } from '@ours/forcegraph-tsl';
+import type { ForceGraph, ForceGraphOptions, GraphId } from '@ours/forcegraph-tsl';
+import { GraphController } from '@ours/forcegraph-tsl/core';
+import type { GraphErrorCode, WorkerLike } from '@ours/forcegraph-tsl/core';
+import type { CreateThreePlatformOptions, ThreePlatform } from '@ours/forcegraph-tsl/three';
+import { DeterministicForceLayout } from '@ours/forcegraph-tsl/layout';
+import { planLabelVisibility } from '@ours/forcegraph-tsl/labels';
+import type { LabelCandidate, LabelVisibilityDecision } from '@ours/forcegraph-tsl/labels';
+import { planPerspectiveCameraFrame, sampleCameraPoseTween } from '@ours/forcegraph-tsl/camera';
+import type { CameraPoseTweenOptions, CameraTweenPath } from '@ours/forcegraph-tsl/camera';
+import { createForceGraphLayoutWorker, forceGraphLayoutWorkerUrl } from '@ours/forcegraph-tsl/worker';
+import type { LayoutWorkerCommand } from '@ours/forcegraph-tsl/worker';
+import { createHeadlessForceGraph } from '@ours/forcegraph-tsl/headless';
+
+const factory: (options?: ForceGraphOptions) => Promise<ForceGraph> = createForceGraph3D;
+const id: GraphId = 'node';
+const code: GraphErrorCode = 'FG_LAYOUT_BUFFER_PROTOCOL_FAILED';
+const worker: WorkerLike | undefined = undefined;
+const command: LayoutWorkerCommand | undefined = undefined;
+const createPlatform: (options: CreateThreePlatformOptions) => ThreePlatform = createThreePlatform;
+const candidate: LabelCandidate = { id, bounds: { x: 0, y: 0, width: 50, height: 20 } };
+const labels: readonly LabelVisibilityDecision[] = planLabelVisibility([candidate], { viewport: { x: 0, y: 0, width: 100, height: 100 } });
+const frame = planPerspectiveCameraFrame({ min: { x: 0, y: 0, z: 0 }, max: { x: 1, y: 1, z: 1 } }, { aspect: 1, verticalFovDegrees: 42 });
+const path: CameraTweenPath = { type: 'arc', offset: { x: 0, y: 2, z: 1 } };
+const tween: CameraPoseTweenOptions = { from: frame, to: frame, durationMs: 1000, path };
+const pose = sampleCameraPoseTween(tween, 500);
+const browserWorkerFactory: () => Worker = createForceGraphLayoutWorker;
+const asset: URL = forceGraphLayoutWorkerUrl;
+const headless = createHeadlessForceGraph();
+void [factory, id, code, worker, command, createPlatform, GraphController, DeterministicForceLayout, labels, pose, browserWorkerFactory, asset, NodeFlags.Dimmed];
+headless.dispose();
+// @ts-expect-error Invalid easing is rejected instead of weakening the public surface to any.
+sampleCameraPoseTween({ ...tween, easing: 'unbounded' }, 500);

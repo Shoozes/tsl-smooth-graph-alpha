@@ -2,10 +2,10 @@
   "schema": "public-release-manifest/v1",
   "project": "tsl-smooth-graph",
   "status": "pass",
-  "generated_at_utc": "2026-10-01T02:47:51.564Z",
+  "generated_at_utc": "2026-10-12T07:04:10Z",
   "fingerprint_algorithm": "sha256-json-file-table-v1",
   "fingerprint_definition": "SHA256(UTF8(JSON.stringify({schema:\"public-source-content/v1\",files:<ordered path,bytes,sha256 table>}) + \"\\n\"))",
-  "source_fingerprint_sha256": "413d366cc4f37d42836f7c2aaf4b72c1276efd5fd75eeef9524749a66cbaee41",
+  "source_fingerprint_sha256": "c7beada2b399ed2f098b36782a22fbcf6d8906be4abc8491710ce4d8d2447c8a",
   "self_manifest_exclusion": "PUBLIC_MANIFEST.json",
   "manifest_complete": true,
   "verification_exclusions": [
@@ -13,16 +13,25 @@
     "dist",
     "node_modules"
   ],
-  "ignored_verification_roots": [],
-  "file_count": 137,
-  "total_file_bytes": 2218517,
-  "scanned_text_files": 132,
-  "binary_ascii_string_scans": 5,
+  "file_count": 161,
+  "total_file_bytes": 2526112,
+  "scanned_text_files": 155,
+  "binary_ascii_string_scans": 6,
   "files": [
     {
       "path": ".gitattributes",
       "bytes": 81,
       "sha256": "7412e59029b4b300dafcb8d62349a630d78067e91e5e52725c6743960404f0cc"
+    },
+    {
+      "path": ".github/workflows/package-candidate.yml",
+      "bytes": 1963,
+      "sha256": "bddaaa81cf732480c3bbc440a0938b77a665a941f39a787059cce18b75f5b7ba"
+    },
+    {
+      "path": ".github/workflows/pages.yml",
+      "bytes": 1919,
+      "sha256": "f8dc16deeba8762adae6da8007fc5db1f8fe04fc64e5da34235d587cb612a496"
     },
     {
       "path": ".gitignore",
@@ -41,13 +50,18 @@
     },
     {
       "path": "README.md",
-      "bytes": 5648,
-      "sha256": "16261d55800be190bb71925d3485bd552dc9cc897b7ca21d5f87abe608ab01b8"
+      "bytes": 6569,
+      "sha256": "9b3a52c258d73e7a8bdedeae7a615c0023f58ba5e94ab786d59c1934a162b5dd"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
       "bytes": 1060,
       "sha256": "c6b50661ee85dd46ba9ab1b69d07771b16238cf698386e651eb47627c6822258"
+    },
+    {
+      "path": "design-qa.md",
+      "bytes": 11153,
+      "sha256": "d4f62cad45208ad8fd7962d39e201cef798c7fedf9f5870dbe9ffd4721ae0aae"
     },
     {
       "path": "docs/API.md",
@@ -60,14 +74,29 @@
       "sha256": "adcfaef1a3028f06110183557881aa037f4ae497ff0d719845ce06384ce4ab7c"
     },
     {
+      "path": "docs/DEPLOYMENT.md",
+      "bytes": 5991,
+      "sha256": "d25d5f4642854c3188b1225b0382bc26bf7fe8d86de724b7e8f1e736c6dbec43"
+    },
+    {
+      "path": "docs/PACKAGE_EXPORTS.md",
+      "bytes": 7129,
+      "sha256": "46610b22d1e4ce51e3704d9ff20bcd30b2e14d1e76c947fc45c02a9b3148b1d5"
+    },
+    {
       "path": "docs/PACKAGE_README.md",
       "bytes": 1788,
       "sha256": "873bdeb6e5d08c91edbb9681c9fd68014389bd6895bcad63cdd1b236a66269f8"
     },
     {
       "path": "docs/VERIFICATION.md",
-      "bytes": 1837,
-      "sha256": "679f2d4e331669a5f1f8f04ed1674bfe1b1b7ceb55d808ab048569e0679211e6"
+      "bytes": 2172,
+      "sha256": "7ab4db95bcee81177341e08c809d755db4feaf40b841065f1f475ba3f0362777"
+    },
+    {
+      "path": "docs/VIDEO_REFERENCE_WORKFLOW.md",
+      "bytes": 15783,
+      "sha256": "856fe81813b946f9edca5102e0671fb844617fea91164807495ae42a3c4a82ae"
     },
     {
       "path": "docs/licenses/three-MIT.txt",
@@ -176,8 +205,8 @@
     },
     {
       "path": "examples/showcase/examples/manifest.js",
-      "bytes": 2579,
-      "sha256": "c6ac31b730f4717da2b54daca0a2d76a643f7f53b69ca69a85e0ead2a7411317"
+      "bytes": 2827,
+      "sha256": "0035c11d0865fca9ff5a76c48a4e590668006887e0619a7f8420569903bb61dc"
     },
     {
       "path": "examples/showcase/examples/materials/index.html",
@@ -230,9 +259,54 @@
       "sha256": "987b44dc4fe2485eb862bc05cb2bba8650d4f410aed40bf33331238c700cd842"
     },
     {
+      "path": "examples/showcase/examples/search-scan/README.md",
+      "bytes": 11209,
+      "sha256": "263ef207b13881a713b24b5bf952edd295154e14430925579227d35c113bed7b"
+    },
+    {
+      "path": "examples/showcase/examples/search-scan/index.html",
+      "bytes": 3516,
+      "sha256": "0e464b8cabfdac4e52fd8f0de54a35c0f4215406f75258006c6872090e77d4b4"
+    },
+    {
+      "path": "examples/showcase/examples/search-scan/media/search-scan-overview.jpg",
+      "bytes": 95226,
+      "sha256": "624443f93b58be1c37a720e341283b51b33eb447f9c9e8ce88708d15d216116a"
+    },
+    {
+      "path": "examples/showcase/examples/search-scan/search-scan-canvas.js",
+      "bytes": 14141,
+      "sha256": "a29574057e65f30ead31012a148a0852d2532ef3f41ef925baa60aeaf55129a0"
+    },
+    {
+      "path": "examples/showcase/examples/search-scan/search-scan-model.js",
+      "bytes": 9282,
+      "sha256": "f9a307eee658f2fe5fa658b80bd9dd75ed8c05238cb89fa6104e110ec22441ae"
+    },
+    {
+      "path": "examples/showcase/examples/search-scan/search-scan-prefab.js",
+      "bytes": 25186,
+      "sha256": "0b7008058200aaebdb80eb1ec3201d7dd5d29bd20590c1b457a0b3b8c1e12c18"
+    },
+    {
+      "path": "examples/showcase/examples/search-scan/search-scan-timeline.js",
+      "bytes": 6928,
+      "sha256": "e1506e6641b6b46b6efa3b511af1b4c633232aed5168862c5075275318bc0dbb"
+    },
+    {
+      "path": "examples/showcase/examples/search-scan/search-scan.css",
+      "bytes": 5452,
+      "sha256": "4d1729d52500bae911f9d2175b1cb5337a148e28176b9935c302fb4f60a72ee0"
+    },
+    {
+      "path": "examples/showcase/examples/search-scan/search-scan.js",
+      "bytes": 17747,
+      "sha256": "11f50fd48de55bc851e8bd4312c6dd7204123cdd8a4137659b32c6d07baa05e0"
+    },
+    {
       "path": "examples/showcase/index.html",
-      "bytes": 4569,
-      "sha256": "7fe4d04222b6467cf400cb8776d872b2f70dd170641991d26b13d108af301dcd"
+      "bytes": 4896,
+      "sha256": "ec48bb42521739e311f39ae873f9725491dd9d1c49868082d4d1291e98daeda3"
     },
     {
       "path": "examples/showcase/media/corpus-atlas.png",
@@ -266,13 +340,13 @@
     },
     {
       "path": "examples/showcase/showcase.css",
-      "bytes": 7633,
-      "sha256": "a4d80daf440459a3e0c9018acae71c3f29846bc6777415783cefbd31c998031d"
+      "bytes": 8095,
+      "sha256": "7c37fa13d03f0928be9088b55bdaa9292876493956228054185b517de9e0dc51"
     },
     {
       "path": "examples/showcase/showcase.js",
-      "bytes": 22951,
-      "sha256": "d9223e47204fe25a5169269a47184c5315419df04e324dcba07b1fd097bcaa70"
+      "bytes": 23118,
+      "sha256": "9da883498c3773101214e86e791e19dd7263c8ddb7e7d49d25e311a06b60e4ab"
     },
     {
       "path": "examples/theme/vector-relay.css",
@@ -281,8 +355,8 @@
     },
     {
       "path": "package.json",
-      "bytes": 2209,
-      "sha256": "36afda246416ff43c84271d165295dced1ea3467b8a213469a37c32801a039b9"
+      "bytes": 2724,
+      "sha256": "97477bc13754b705c41f6a8eb8a9ad3169db930c5c2e1b33c5d0318a85e1442d"
     },
     {
       "path": "pnpm-lock.yaml",
@@ -311,8 +385,8 @@
     },
     {
       "path": "scripts/README.md",
-      "bytes": 1155,
-      "sha256": "440d33fa66c45abbf61b28a89316b68fc6af452e3778db34f8ffdc5566e72c1e"
+      "bytes": 1469,
+      "sha256": "89785baaae70feaa7053108c28c23f3088f1e539a1dc8638dd8b5f5d5066ca8a"
     },
     {
       "path": "scripts/app.ps1",
@@ -325,6 +399,11 @@
       "sha256": "e1a0c231002d693e9648c1e3545a8c4467ce12cd79c3ffb51b0459aa7f614d30"
     },
     {
+      "path": "scripts/build-pages.mjs",
+      "bytes": 7240,
+      "sha256": "c1caec4e172a9d146d7a0a567315246d5165ca219d52499a72c4627373479d22"
+    },
+    {
       "path": "scripts/check-docs.mjs",
       "bytes": 1991,
       "sha256": "835ac10050882d386edd9a937c068bc768f1d14581ab56ddb5513ce7e752ca93"
@@ -335,14 +414,24 @@
       "sha256": "163f0402b5f0577140e2383fe2806550500a16d4bea0f29bc293bc78a51d7edf"
     },
     {
+      "path": "scripts/pages-status.mjs",
+      "bytes": 3009,
+      "sha256": "27b5160db09822d0a7db1488b808d76f754774420e2ac5d9e76dc91ae97d1138"
+    },
+    {
       "path": "scripts/run-tests.mjs",
-      "bytes": 1613,
-      "sha256": "f84133242b27b1c3e302a81e633346ebb07f5211ac6ccf73562b09e7fe0351fd"
+      "bytes": 1710,
+      "sha256": "22d474c2775e02e0e2e4b5154bf3daf208bf13d8294e5202ee42e57a0e2d0fac"
     },
     {
       "path": "scripts/showcase-server.mjs",
       "bytes": 1798,
       "sha256": "fe26b681b22109aedcc2ac00f9b47b0b3baceac7666c6b8102b3d7b3152572d2"
+    },
+    {
+      "path": "scripts/verify-package.mjs",
+      "bytes": 11452,
+      "sha256": "2cd2609e303b762c5d29061412ab8d94e7efd2f330b8cfa20d60ad8dca71a68a"
     },
     {
       "path": "source/README.md",
@@ -585,9 +674,34 @@
       "sha256": "41bf79c668e485a82d63fd9cd17b75c863eecd26a27bb3650d7a22718e405279"
     },
     {
+      "path": "tests/browser/search-scan-prefab.test.mjs",
+      "bytes": 13084,
+      "sha256": "4c20a15c32c2fcdb8f528dc43c7f5fc23765cdf0c12071e97a085a3687aabfbd"
+    },
+    {
+      "path": "tests/browser/search-scan.test.mjs",
+      "bytes": 12534,
+      "sha256": "cf8ba15c73927f323abcd22d549703f21c3513fcbfc10867cf3f30110e0babfa"
+    },
+    {
       "path": "tests/browser/static-server.test.mjs",
       "bytes": 18105,
       "sha256": "18159dff8cf7cd8872e5c181e65caef3c4827456fbe5a3b4a21807a6c04d982b"
+    },
+    {
+      "path": "tests/package/consumer-headless.ts",
+      "bytes": 989,
+      "sha256": "5e21872019e88d7f5049d8aadc576d0771ad1d808791ad8b1a21d0b0ccbdcff8"
+    },
+    {
+      "path": "tests/package/consumer-smoke.mjs",
+      "bytes": 4687,
+      "sha256": "c73b1ccbdbc126aa4486edd564c11b888db0165698939d28b3b209099a0f6108"
+    },
+    {
+      "path": "tests/package/consumer-types.ts",
+      "bytes": 2557,
+      "sha256": "50bee73c3862c3da243dbddb783659efb834413d2a08805b1d63889aeea1e52b"
     },
     {
       "path": "tests/package/public-api-baseline.json",
@@ -690,6 +804,11 @@
       "sha256": "2974d1de6f5b10d548a807e69be35f9c97df16a219ff1dcba43ce5fee5168cb6"
     },
     {
+      "path": "tests/tooling/pages-build.test.mjs",
+      "bytes": 16032,
+      "sha256": "3795bd356e6865d277ed294363aead0eca8830d120b19991c94724129aa3bf1d"
+    },
+    {
       "path": "tests/tooling/task-menu.test.mjs",
       "bytes": 6387,
       "sha256": "eda845e30888b87543fc09fdad735b37aaec1f753f752038aa4cd6cbb3c982dc"
@@ -705,7 +824,6 @@
       "sha256": "570ec4e6768a722f59ba4e0404cda874b5491af6ef94670ebc4f3e0541b22c59"
     }
   ],
-  "archives": [],
   "media_approvals": [
     {
       "path": "examples/showcase/media/corpus-atlas.png",
@@ -713,7 +831,9 @@
       "reviewer": "root",
       "capture_record": "evidence/tsl-smooth-graph-final-visual-browser-audit.json",
       "reason": "Root opened and inspected this fresh installed-Chrome capture. Graph datasets and Aurora corpus names, folders and file sizes are invented demo data; no private archive contents or paths appear.",
-      "provenance": "synthetic-capture"
+      "provenance": "synthetic-capture",
+      "review_status": "carried-forward-unchanged",
+      "reviewed_manifest_generated_at_utc": "2026-10-01T02:47:51.564Z"
     },
     {
       "path": "examples/showcase/media/corpus-motion-studio.png",
@@ -721,7 +841,9 @@
       "reviewer": "root",
       "capture_record": "evidence/tsl-smooth-graph-final-visual-browser-audit.json",
       "reason": "Root opened and inspected this fresh installed-Chrome capture. Graph datasets and Aurora corpus names, folders and file sizes are invented demo data; no private archive contents or paths appear.",
-      "provenance": "synthetic-capture"
+      "provenance": "synthetic-capture",
+      "review_status": "carried-forward-unchanged",
+      "reviewed_manifest_generated_at_utc": "2026-10-01T02:47:51.564Z"
     },
     {
       "path": "examples/showcase/media/showcase-options.png",
@@ -729,7 +851,9 @@
       "reviewer": "root",
       "capture_record": "evidence/tsl-smooth-graph-final-visual-browser-audit.json",
       "reason": "Root opened and inspected this fresh installed-Chrome capture. Graph datasets and Aurora corpus names, folders and file sizes are invented demo data; no private archive contents or paths appear.",
-      "provenance": "synthetic-capture"
+      "provenance": "synthetic-capture",
+      "review_status": "carried-forward-unchanged",
+      "reviewed_manifest_generated_at_utc": "2026-10-01T02:47:51.564Z"
     },
     {
       "path": "examples/showcase/media/showcase-overview.png",
@@ -737,7 +861,9 @@
       "reviewer": "root",
       "capture_record": "evidence/tsl-smooth-graph-final-visual-browser-audit.json",
       "reason": "Root opened and inspected this fresh installed-Chrome capture. Graph datasets and Aurora corpus names, folders and file sizes are invented demo data; no private archive contents or paths appear.",
-      "provenance": "synthetic-capture"
+      "provenance": "synthetic-capture",
+      "review_status": "carried-forward-unchanged",
+      "reviewed_manifest_generated_at_utc": "2026-10-01T02:47:51.564Z"
     },
     {
       "path": "examples/showcase/media/showcase-scale.png",
@@ -745,26 +871,51 @@
       "reviewer": "root",
       "capture_record": "evidence/tsl-smooth-graph-final-visual-browser-audit.json",
       "reason": "Root opened and inspected this fresh installed-Chrome capture. Graph datasets and Aurora corpus names, folders and file sizes are invented demo data; no private archive contents or paths appear.",
-      "provenance": "synthetic-capture"
+      "provenance": "synthetic-capture",
+      "review_status": "carried-forward-unchanged",
+      "reviewed_manifest_generated_at_utc": "2026-10-01T02:47:51.564Z"
+    },
+    {
+      "path": "examples/showcase/examples/search-scan/media/search-scan-overview.jpg",
+      "sha256": "624443f93b58be1c37a720e341283b51b33eb447f9c9e8ce88708d15d216116a",
+      "reviewer": "assistant/root",
+      "capture_record": "design-qa.md",
+      "reason": "Opened and visually inspected the actual implementation-only browser capture: synthetic graph vocabulary and controls, with explicit Canvas2D fallback label. It contains no supplied video frame, private document, original upload name, or machine path.",
+      "provenance": "synthetic-browser-capture",
+      "review_status": "reviewed-this-candidate"
     }
   ],
   "reviewed_exceptions": [],
-  "inputs": {
-    "allowlist_sha256": "1b51aa7f64270b5291f17cdc4433bf21b6bb97d6725273162ee7884507248139",
-    "media_reviews_sha256": "57d16b6de7e05441a1e1a8926443548b868cdb3981273db27f559e528f59c0f8",
-    "exceptions_sha256": "abbff0210a39384883ebfeae15a605547a4838d951679dff5d83512299d3f352"
+  "review": {
+    "kind": "source-delta-and-publication-preparation",
+    "reviewer": "assistant/root",
+    "public_base_revision": "2421a5938f73be86a774d1fd870d20c20cf1d5c0",
+    "previous_source_fingerprint_sha256": "413d366cc4f37d42836f7c2aaf4b72c1276efd5fd75eeef9524749a66cbaee41",
+    "evidence": [
+      "design-qa.md",
+      "docs/VIDEO_REFERENCE_WORKFLOW.md",
+      "docs/PACKAGE_EXPORTS.md",
+      "docs/DEPLOYMENT.md"
+    ],
+    "mechanical_checks": [
+      "Full source inventory and exact file hashes; no source symlinks or ignored ordinary files.",
+      "Bounded credential and machine-path patterns scanned across source bytes.",
+      "pnpm run check: 191 product + 86 example/tooling tests; documentation links pass.",
+      "Five historical media reviews matched unchanged bytes; the new sixth synthetic capture was visually reviewed.",
+      "The exact local npm archive passed isolated consumer installation, eight runtime entry points, packaged assets, and both strict type profiles."
+    ],
+    "provenance_note": "This is a new delta review, not a rerun of the unavailable original sanitizer. Historical media approval records are carried forward only for identical bytes. No unseen checker or review-input hash is reused."
   },
-  "checker_sha256": "83d00e2c42f12c817a9362487592540e960c86405e4be9d2c374c6e1f0122dce",
   "findings_count": 0,
   "findings": [],
   "values_exposed": false,
-  "scope": "Exact current sanitized source snapshot; no Git, reachable history, remote refs, dependency advisory lookup, OCR, or pixel-content automation.",
+  "scope": "Current public source inventory, reviewed implementation/tooling/documentation changes, bounded disclosure patterns, and synthetic media. Package consumption and deployment receipts are separate artifacts.",
   "limitations": [
-    "Pattern scanning is a bounded disclosure check, not a guarantee that every credential or private datum was detected.",
-    "Media approval is a supplied human inspection/capture record bound to exact bytes; this tool cannot infer pixel privacy.",
-    "Binary ASCII strings are pattern-scanned; encoded metadata, visual text, and other opaque representations may remain undetected.",
-    "Archive notices are detected by filename; redistribution correctness still needs review of the retained notices.",
-    "Explicit generated verification roots are outside the source export and must not be copied into publication.",
-    "The self manifest is excluded from its own content fingerprint and is not a payload or execution proof."
+    "Bounded pattern scans are not a guarantee that every credential or private datum was detected.",
+    "New media review is assistant visual inspection of exact bytes; no independent human review is claimed. Historical records remain attributed to their original review.",
+    "Private source video, extracted frames, and reference comparisons are excluded from the public source.",
+    "The available browser verified Canvas2D presentation and static routing; GPU execution and performance remain unverified.",
+    "Registry authentication, scope ownership, and Pages account configuration are not established by this manifest.",
+    "Generated verification roots and the root Git directory are excluded; this manifest is excluded from its own fingerprint."
   ]
 }
