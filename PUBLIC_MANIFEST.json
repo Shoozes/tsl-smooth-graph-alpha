@@ -2,10 +2,10 @@
   "schema": "public-release-manifest/v1",
   "project": "tsl-smooth-graph",
   "status": "pass",
-  "generated_at_utc": "2026-10-12T13:57:21Z",
+  "generated_at_utc": "2026-10-17T18:27:48.506Z",
   "fingerprint_algorithm": "sha256-json-file-table-v1",
   "fingerprint_definition": "SHA256(UTF8(JSON.stringify({schema:\"public-source-content/v1\",files:<ordered path,bytes,sha256 table>}) + \"\\n\"))",
-  "source_fingerprint_sha256": "67da4d0c80da585e88d8b6eb172340a7ffabaf0c52de2fa554c4d321d08a0418",
+  "source_fingerprint_sha256": "cf47b31c0c35c94a93e4e97ab76aa7442c0f17f4f8b5c14a8f7123a7a7ffcfde",
   "self_manifest_exclusion": "PUBLIC_MANIFEST.json",
   "manifest_complete": true,
   "verification_exclusions": [
@@ -13,9 +13,9 @@
     "dist",
     "node_modules"
   ],
-  "file_count": 168,
-  "total_file_bytes": 2617466,
-  "scanned_text_files": 162,
+  "file_count": 169,
+  "total_file_bytes": 2626186,
+  "scanned_text_files": 163,
   "binary_ascii_string_scans": 6,
   "files": [
     {
@@ -90,8 +90,8 @@
     },
     {
       "path": "docs/VERIFICATION.md",
-      "bytes": 2172,
-      "sha256": "7ab4db95bcee81177341e08c809d755db4feaf40b841065f1f475ba3f0362777"
+      "bytes": 2871,
+      "sha256": "46e896453ace918f0b8432c2a61f159e1007cf9938893dbae0fcc3db9e0fb579"
     },
     {
       "path": "docs/VIDEO_REFERENCE_WORKFLOW.md",
@@ -125,8 +125,8 @@
     },
     {
       "path": "examples/corpus/corpus.js",
-      "bytes": 42547,
-      "sha256": "e88e603187f5f4ec3ba1bf5d05d73123951c70b3291280ac79a807b1ba832a34"
+      "bytes": 42875,
+      "sha256": "787da644d46d93fa85305a1de75d604ca9a34a32bf353d3661e838de993f747a"
     },
     {
       "path": "examples/corpus/index.html",
@@ -140,8 +140,8 @@
     },
     {
       "path": "examples/corpus/node-position-motion.js",
-      "bytes": 3142,
-      "sha256": "95dbdb26df7469fa68a463d8a23051bf661ca9ac06ad30566e46997762a37e73"
+      "bytes": 3620,
+      "sha256": "73c612984039b36d71c8dbafa0acc848b936d0e06ccea81e78ee79acf2da386a"
     },
     {
       "path": "examples/corpus/sample-manifest.json",
@@ -435,8 +435,8 @@
     },
     {
       "path": "scripts/run-tests.mjs",
-      "bytes": 1848,
-      "sha256": "8dfd96b69e4b9b09c1605f7e00cae94318727ca99f66a444f15553d13de5a755"
+      "bytes": 1883,
+      "sha256": "615cc12afdb5bf3df1ab54bb47bb852ec1ca6b40d8343b2ed18d4ee0df6069f6"
     },
     {
       "path": "scripts/showcase-server.mjs",
@@ -677,6 +677,11 @@
       "path": "tests/browser/dynamic-routes.test.mjs",
       "bytes": 9830,
       "sha256": "7c5c250762e15ef89e0f9a616b0dfe4dc9ecfe6e240a2a68925a147df7b9accd"
+    },
+    {
+      "path": "tests/browser/node-position-motion.test.mjs",
+      "bytes": 7180,
+      "sha256": "52ffdd3b2fa273593c31912fd70b9a4eb8b2ec04fb0fc409ff289644c9bea40f"
     },
     {
       "path": "tests/browser/node-spawn-motion.test.mjs",
@@ -922,35 +927,56 @@
   ],
   "reviewed_exceptions": [],
   "review": {
-    "kind": "search-scan-nearest-node-leg-contact-and-response-source-delta",
+    "kind": "corpus-reduced-motion-demand-rendering-bounded-source-delta",
     "reviewer": "assistant/root",
-    "public_base_revision": "3abec46c993c90f607373b05fc3fa2e49eb1c0fa",
-    "previous_source_fingerprint_sha256": "42e834468f3b7dfee052566b19bea9e3d24a2b463be82b02dd9663d6b955238b",
+    "independent_reviewer": "assistant/tsl_remote_review",
+    "public_base_revision": "caa8b5033fcca94dd2d0292628c49851ec4f38b3",
+    "reviewed_candidate_revision": "5826a402646c4d1eb1c757f1af41d29d7c12c109",
+    "previous_source_fingerprint_sha256": "67da4d0c80da585e88d8b6eb172340a7ffabaf0c52de2fa554c4d321d08a0418",
+    "previous_manifest_sha256": "4c8a7070fbcf25a6d8c3c97bb023a606b4428bfcf83587096dcc35506e07f812",
+    "allowlist": [
+      "docs/VERIFICATION.md",
+      "examples/corpus/corpus.js",
+      "examples/corpus/node-position-motion.js",
+      "scripts/run-tests.mjs",
+      "tests/browser/node-position-motion.test.mjs"
+    ],
     "evidence": [
-      "design-qa.md",
-      "examples/showcase/examples/search-scan/README.md",
-      "docs/VIDEO_REFERENCE_WORKFLOW.md"
+      "docs/VERIFICATION.md",
+      "tests/browser/node-position-motion.test.mjs"
     ],
+    "verification_receipt": {
+      "kind": "Local combined acceptance receipt retained separately by the owner",
+      "bytes": 452879,
+      "sha256": "046f607dc1784fea6420fd8cc40224892195b95f193f9a0d4511d28f866d5db2",
+      "producer_integration_fragment_sha256": "2c9cfa1e2908b2548068789da9c1a1726875541047b85f32104c2d73456758f8"
+    },
     "mechanical_checks": [
-      "Complete physical source inventory equals the Git candidate; exact file hashes, no source symlinks or ignored ordinary files.",
-      "Bounded credential and machine-path patterns scanned across source text and printable binary strings, with zero findings.",
-      "Full repository check passed 191 product tests and 122 example/tooling tests. New cases verify nearest targets, real geometry contacts, phase continuity, deterministic seeking, reactive halos, and resource ownership.",
-      "Browser verified changed hand positions and responsive node lights at 2.30 and 2.38 seconds and advancing playback in the rebuilt Canvas example.",
-      "Seven content-versioned local module entries match their SHA-256 prefixes; static Pages build completed with 183 files.",
-      "All six existing media approvals match identical bytes; no media was added or replaced."
+      "Current physical source equals the Git-tracked payload: 169 files, no source symlinks or extra ordinary files; only declared generated roots and root Git metadata excluded.",
+      "Independent history review found exactly five intended delta paths and seven new text blobs; no new binary media.",
+      "Bounded private-machine-path, private-key and provider-token patterns scanned across 163 text files and printable strings in six binary media files, with zero findings.",
+      "68 focused local Node tests passed: 15 Corpus motion/navigation and 53 incoming search-scan cases. Documentation checked 63 local links and six syntax checks passed.",
+      "Recorded actual Chrome 155 desktop 1280x900 and narrow 390x844 Corpus journeys ran WebGL2/TSL through ANGLE SwiftShader. Full motion redrew real nodes; reduced motion settled them, disabled breathing, and left zero settled graph draws over the bounded idle samples. Page disposal stopped measured task draws and frames.",
+      "All 40 runtime source files, lockfile, eight exports and dependency pins are unchanged. Existing 205-file pinned graph package was reused read-only and byte-verified; no archive upgrade is claimed.",
+      "All six original media approval objects and their file hashes remain unchanged."
     ],
-    "provenance_note": "This is a bounded delta review, not a rerun of the unavailable original sanitizer. Historical media approvals are carried forward only for identical bytes. No unseen checker or review-input hash is reused."
+    "pending_checks": [
+      "Fresh complete pnpm check and static Pages build have not been run locally; they remain required in the existing finite Demo Pages publication workflow.",
+      "New archive packaging, isolated package-consumer installation and npm registry publication are separate and were not performed."
+    ],
+    "provenance_note": "This is a bounded source inventory/disclosure and five-path delta review. Prior full-repository/Canvas results are historical at the referenced base revision and fingerprint, not fresh results for this renewal."
   },
   "findings_count": 0,
   "findings": [],
   "values_exposed": false,
-  "scope": "Current public source inventory, reviewed implementation/tooling/documentation changes, bounded disclosure patterns, and synthetic media. Package consumption and deployment receipts are separate artifacts.",
+  "scope": "Current public source inventory and bounded five-path Corpus motion delta review. Separate receipts record focused checks, reused runtime provenance and Corpus browser qualification. Hosting and npm package release qualification remain separate.",
   "limitations": [
-    "Bounded pattern scans are not a guarantee that every credential or private datum was detected.",
-    "New media review is assistant visual inspection of exact bytes; no independent human review is claimed. Historical records remain attributed to their original review.",
-    "Private source video, extracted frames, and reference comparisons are excluded from the public source.",
-    "The available browser verified Canvas2D presentation and static routing; GPU execution and performance remain unverified.",
-    "Registry authentication, scope ownership, and Pages account configuration are not established by this manifest.",
-    "Generated verification roots and the root Git directory are excluded; this manifest is excluded from its own fingerprint."
+    "Bounded pattern scans do not guarantee every credential or private datum was detected.",
+    "Historical media approval attributions are preserved only for identical bytes; no new media or independent human review is claimed.",
+    "Private source video, extracted frames and reference comparisons remain excluded from public source.",
+    "Current browser proof covers only the recorded Corpus desktop/narrow Chrome WebGL2/TSL ANGLE SwiftShader journeys. New search-scan GPU rendering, physical GPU/iOS support and general performance are not qualified.",
+    "Fresh full pnpm check, static Pages build and deployment were not completed locally. The existing publication workflow remains pending and must pass before live deployment can be claimed.",
+    "New package consumption, registry authentication, scope ownership and npm publishing are not established by this manifest.",
+    "Generated verification roots and root Git metadata are excluded; this manifest is excluded from its own fingerprint."
   ]
 }
