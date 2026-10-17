@@ -1,0 +1,50 @@
+name: Package candidate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - uses: pnpm/action-setup@fdbc4fdcf7d143a5d0a39e9a02e103b13e309024 # v6.0.4
+        with:
+          version: 11.19.0
+          run_install: false
+      - name: Install pinned dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Check candidate
+        run: pnpm run check
+      - name: Package reviewed source
+        run: npm run pack:release -- --output "$RUNNER_TEMP/forcegraph-package"
+      - name: Verify the installed archive
+        run: |
+          node --input-type=module <<'JS'
+          import { readdir } from 'node:fs/promises';
+          import { spawnSync } from 'node:child_process';
+          import path from 'node:path';
+          const output = path.join(process.env.RUNNER_TEMP, 'forcegraph-package');
+          const archives = (await readdir(output)).filter(name => name.endsWith('.tgz'));
+          if (archives.length !== 1) throw new Error('Expected exactly one candidate archive.');
+          const result = spawnSync(process.execPath, ['scripts/verify-package.mjs', path.join(output, archives[0])], { stdio: 'inherit' });
+          if (result.error) throw result.error;
+          process.exit(result.status ?? 1);
+          JS
+      - name: Upload archive and receipts
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: forcegraph-package-candidate
+          path: ${{ runner.temp }}/forcegraph-package/
+          if-no-files-found: error
+          retention-days: 30

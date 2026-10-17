@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Interactive local showcase for @ours/forcegraph-tsl.">
+    <meta name="description" content="Interactive showcase for @ours/forcegraph-tsl.">
     <link rel="icon" href="data:,">
     <title>ForceGraph TSL showcase</title>
     <script type="importmap">
@@ -23,13 +23,18 @@
         <div>
           <p class="eyebrow">@ours/forcegraph-tsl</p>
           <h1>Graph behavior, on display.</h1>
-          <p class="lede">A local, interactive exhibit of nodes, links, layout, and state change driven by the package.</p>
+          <p class="lede">An interactive exhibit of nodes, links, layout, and state change driven by the package.</p>
         </div>
         <div class="masthead-actions"><a href="#examples">Browse examples</a><output id="runtime-status" class="runtime-status" data-state="loading">Starting renderer</output></div>
       </header>
 
       <section class="stage" aria-label="Interactive force graph showcase">
         <canvas id="graph" aria-label="Interactive force graph"></canvas>
+        <aside class="renderer-unavailable" hidden role="status">
+          <h2>Graph preview unavailable</h2>
+          <p>This preview needs a working WebGPU or WebGL2 renderer. You can still browse the examples below.</p>
+          <a href="./examples/search-scan/index.html">Open Search scan with Canvas2D support</a>
+        </aside>
         <aside class="control-dock" aria-label="Showcase controls" data-presentation-state="ready">
           <div class="scenario-control">
             <p class="control-label">Scenario</p>

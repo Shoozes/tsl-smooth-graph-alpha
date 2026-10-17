@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Search scan · ForceGraph TSL</title>
+    <meta name="description" content="A reusable, deterministic graph-search replay with clustered constellations, a travelling scanner, and cinematic camera motion.">
+    <link rel="icon" href="data:,">
+    <!-- Refresh each local module's version from its first 16 SHA-256 digits when that file changes. -->
+    <script type="importmap">{"imports":{"three":"../../../vendor/three.module.js","three/tsl":"../../../vendor/three.tsl.js","three/webgpu":"../../../vendor/three.webgpu.js","three/addons/":"../../../addons/","@ours/forcegraph-tsl":"../../../dist/index.js","@ours/forcegraph-tsl/camera":"../../../dist/camera/index.js","@ours/forcegraph-tsl/labels":"../../../dist/labels/index.js","@ours/forcegraph-tsl/headless":"../../../dist/headless/index.js","./search-scan.js":"./search-scan.js?v=f1b0b53e3a891cb8","./search-scan-graphics.js":"./search-scan-graphics.js?v=5afe05903ce9fd74","./search-scan-prefab.js":"./search-scan-prefab.js?v=9642f950386dd1cc","./search-scan-contacts.js":"./search-scan-contacts.js?v=7759aa4ffc039584","./search-scan-canvas.js":"./search-scan-canvas.js?v=9dc6e681bd393a55","./search-scan-timeline.js":"./search-scan-timeline.js?v=aded2c005ee45d6b","./search-scan-model.js":"./search-scan-model.js?v=f9a307eee658f2fe"}}</script>
+    <link rel="stylesheet" href="./search-scan.css">
+  </head>
+  <body data-example="search-scan" data-ui-theme="vector-relay">
+    <main class="scan-app">
+      <section class="scan-stage" aria-label="Animated clustered search graph">
+        <canvas id="scan-canvas" tabindex="0" aria-label="Search graph. Drag to orbit, scroll or pinch to zoom. Automatic camera motion stops when you navigate."></canvas>
+        <div class="scan-label-layer" aria-hidden="true"></div>
+      </section>
+      <header class="scan-header">
+        <div><a class="scan-home" href="../../index.html">ForceGraph TSL</a><h1>Search scan</h1></div>
+        <div class="scan-meta"><span data-mode>Synthetic demo replay</span><output data-counts>Preparing graph</output></div>
+      </header>
+      <form class="scan-search" aria-label="Search the example graph">
+        <label for="scan-query">Find a label</label>
+        <div><input id="scan-query" type="search" aria-label="Find a label" maxlength="120" placeholder="Search labels…" autocomplete="off"><button type="submit">Find</button><button type="button" data-action="reset">Reset</button></div>
+        <p data-search-status>Try source, scope or reference. Searches demo labels and annotations.</p>
+      </form>
+      <div class="scan-caption" aria-hidden="true"><span data-phase>Preparing</span><strong data-group>Constellation</strong><span data-step>Ordered presentation · stable graph</span></div>
+      <section class="scan-controls" aria-label="Replay controls">
+        <div class="scan-timeline"><label for="scan-time">Playhead</label><input id="scan-time" type="range" aria-label="Playhead" min="0" max="11100" value="0" step="10"><output for="scan-time" data-time>0.00 / 11.10 s</output></div>
+        <div class="scan-buttons">
+          <button type="button" data-action="play" aria-pressed="false">Play</button>
+          <button type="button" data-action="restart">Restart</button>
+          <button type="button" data-action="overview">Overview</button>
+          <label>Speed <select data-speed aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label>
+          <label class="scan-check"><input type="checkbox" data-follow checked>Follow camera</label>
+          <label class="scan-check"><input type="checkbox" data-reduced>Reduced motion</label>
+        </div>
+        <output class="scan-status" data-status role="status" aria-live="polite">Starting the renderer</output>
+        <nav class="scan-graphics" aria-label="Graphics mode"><a href="?backend=canvas2d" data-compatibility>Compatibility mode</a><a href="./index.html" data-automatic>Automatic graphics</a></nav>
+      </section>
+    </main>
+    <script type="module" src="./search-scan-boot.js"></script>
+    <noscript><p class="scan-script-notice">Enable JavaScript to run this graph demo.</p></noscript>
+  </body>
+</html>

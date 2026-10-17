@@ -10,6 +10,10 @@
   the staged README with the consumer guide, and writes the archive plus a
   source-fingerprint receipt outside the source tree. It does not install
   dependencies or run lifecycle scripts.
+- `verify-package.mjs` checks an actual local tarball in an isolated consumer,
+  including package exports, DOM-free headless behavior, declarations, and notices.
+- `build-pages.mjs` builds a bounded static demo artifact with local Three
+  modules, project-subpath-safe routes, and a deterministic file inventory.
 
 `app.ps1` is the PowerShell 5.1/7 app entry. It delegates to the root `run.mjs`
 runner, which reads the single [project.tasks.json](../project.tasks.json)

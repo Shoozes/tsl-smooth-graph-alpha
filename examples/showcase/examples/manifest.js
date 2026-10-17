@@ -8,7 +8,8 @@ export const showcaseExamples = Object.freeze([
   route('scale', '07', '1k Scale', 'One thousand nodes', 'scale', ['layout', 'theme'], 'Dense atlas, picking, two draws', 'One thousand nodes and three thousand links remain two batched draws.'),
   route('bloom', '08', 'Bloom', 'Bloom post shader', 'observatory', [], 'RenderPipeline glow after two draws', 'A host-owned RenderPipeline adds bloom after the two graph draws.'),
   route('pinned', '09', 'Pinned', 'Pinned drag behavior', 'basic', ['release', 'pin-mode', 'overview', 'layout'], 'Keep or release dragged nodes without payload mutation', 'Drag a node, let the layout run, then release it explicitly.'),
-  route('dynamic', '10', 'Dynamic', 'Stable-ID dynamic graph', 'dynamic', ['dynamic', 'add', 'remove', 'overview'], 'Bounded Worker-backed add/remove churn', 'Watch stable nodes emerge from deterministic parents, or remove the selected node.')
+  route('dynamic', '10', 'Dynamic', 'Stable-ID dynamic graph', 'dynamic', ['dynamic', 'add', 'remove', 'overview'], 'Bounded Worker-backed add/remove churn', 'Watch stable nodes emerge from deterministic parents, or remove the selected node.'),
+  route('search-scan', '11', 'Search scan', 'Cluster search replay', 'observatory', [], 'Travelling scanner, word reveals, and camera choreography', 'Replay the seeded constellation or search its labels. Pause, seek, and compare the same frame.')
 ]);
 
 export const showcaseCatalog = Object.freeze(Object.fromEntries(showcaseExamples.map((example) => [example.slug, example])));

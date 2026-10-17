@@ -35,6 +35,11 @@ repeated/interrupted actions, responsive layout, keyboard focus, and readable
 text. Public screenshots must come from synthetic data and be inspected before
 release. A passing Node test does not prove visual quality or GPU support.
 
+For a video-inspired example, use the [video-reference workflow](VIDEO_REFERENCE_WORKFLOW.md)
+to preserve source timestamps, turn observations into a temporal contract, and
+compare the implementation at matching dimensions. Review reuse and token savings
+need their own evidence; contact-sheet analysis alone does not establish them.
+
 The reviewed release is the exact inventory in `PUBLIC_MANIFEST.json`. Its
 fingerprint binds the ordered file table. `public-source.json` records ancestry.
 Verify the assembled source, final package, browser journeys, and media before

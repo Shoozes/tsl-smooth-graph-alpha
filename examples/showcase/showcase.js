@@ -141,7 +141,9 @@ async function start() {
       assertions
     };
   } catch (error) {
-    setStatus(error instanceof Error ? error.message : String(error), 'error');
+    setStatus('Graph preview unavailable. Browse examples below.', 'error');
+    document.querySelector('.renderer-unavailable').hidden = false;
+    for (const control of document.querySelectorAll('.control-dock button')) control.disabled = true;
     window.__forcegraphProof = { schema: 'forcegraph_showcase_browser_fixture_v1', status: 'failed', done: true, error: String(error) };
   }
 }

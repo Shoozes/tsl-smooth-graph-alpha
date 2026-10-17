@@ -38,8 +38,12 @@ h1 { max-width: 12ch; margin-bottom: 0.8rem; font-size: clamp(2.2rem, 5vw, 5.8re
 .masthead-actions a { color: var(--paper); text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 0.25rem; }
 .runtime-status { display: block; max-width: 18rem; padding-left: 1rem; border-left: 1px solid var(--line); color: var(--muted); font-family: var(--vr-mono, monospace); font-size: 0.8125rem; line-height: 1.4; }
 .runtime-status[data-state="error"] { color: var(--vr-danger, #ff758f); }
+.renderer-unavailable { position: absolute; z-index: 2; top: 1.5rem; left: 1.5rem; right: 1.5rem; max-width: 34rem; padding: 1.25rem; border: 1px solid var(--line); background: var(--vr-panel, #101719); }
+.renderer-unavailable h2 { margin: 0 0 0.7rem; }
+.renderer-unavailable p { color: var(--muted); line-height: 1.5; }
+.renderer-unavailable a { display: inline-flex; align-items: center; min-height: 44px; color: var(--vr-teal, #55e6d4); }
 
-.stage { margin-top: 1.5rem; overflow: visible; background: var(--scene); border: 1px solid var(--line); }
+.stage { position: relative; margin-top: 1.5rem; overflow: visible; background: var(--scene); border: 1px solid var(--line); }
 #graph { display: block; width: 100%; height: min(68vh, 640px); min-height: 420px; background: var(--scene-deep); }
 .control-dock { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; align-items: start; padding: 1rem 1.15rem; border-top: 1px solid var(--line); background: var(--panel); }
 .scenario-control { min-width: 0; }
