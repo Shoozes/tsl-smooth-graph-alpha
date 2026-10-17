@@ -10,6 +10,7 @@ const exampleTests = [
   'corpus-navigation.test.mjs',
   'dynamic-routes.test.mjs',
   'node-spawn-motion.test.mjs',
+  'node-position-motion.test.mjs',
   'responsive-framing.test.mjs',
   'static-server.test.mjs'
 ].map((name) => `tests/browser/${name}`);

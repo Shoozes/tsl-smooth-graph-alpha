@@ -2,19 +2,36 @@ export function createNodePositionMotion(options) {
   const active = new Map();
   const requestFrame = options.requestFrame ?? requestAnimationFrame;
   const cancelFrame = options.cancelFrame ?? cancelAnimationFrame;
+  const clock = options.now ?? (() => performance.now());
   let frame;
+  let generation = 0;
   let disposed = false;
 
+  const cancelAll = (settle = true) => {
+    const pending = [...active];
+    active.clear();
+    generation += 1;
+    if (frame !== undefined) cancelFrame(frame);
+    frame = undefined;
+    if (settle) for (const [id, motion] of pending) options.setPosition(id, motion.to);
+  };
   const schedule = () => {
-    if (frame === undefined && active.size > 0 && !disposed) frame = requestFrame(tick);
+    if (frame !== undefined || active.size === 0 || disposed) return;
+    const current = generation;
+    frame = requestFrame(time => {
+      // A cancelled callback may already have left the browser's frame queue.
+      if (disposed || current !== generation) return;
+      tick(time);
+    });
   };
   const tick = (time) => {
     frame = undefined;
     if (disposed) return;
+    if (options.reducedMotion?.()) { cancelAll(true); return; }
     for (const [id, motion] of active) {
       if (time < motion.startAt) continue;
       const progress = Math.min(1, (time - motion.startAt) / motion.durationMs);
-      options.setPosition(id, sampleNodeBloomPosition(motion.from, motion.to, id, progress));
+      options.setPosition(id, progress >= 1 ? motion.to : sampleNodeBloomPosition(motion.from, motion.to, id, progress));
       if (progress >= 1) active.delete(id);
     }
     schedule();
@@ -26,20 +43,16 @@ export function createNodePositionMotion(options) {
       const durationMs = Number.isFinite(motion.durationMs) && motion.durationMs > 0 ? motion.durationMs : 760;
       const delayMs = Number.isFinite(motion.delayMs) && motion.delayMs >= 0 ? motion.delayMs : 0;
       if (options.reducedMotion?.()) {
-        options.setPosition(id, to);
+        cancelAll(true);
+        options.setPosition(id, copyPosition(to));
         return false;
       }
-      active.set(id, { from: copyPosition(from), to: copyPosition(to), durationMs, startAt: performance.now() + delayMs });
+      active.set(id, { from: copyPosition(from), to: copyPosition(to), durationMs, startAt: clock() + delayMs });
       options.setPosition(id, from);
       schedule();
       return true;
     },
-    cancelAll(settle = true) {
-      if (settle) for (const [id, motion] of active) options.setPosition(id, motion.to);
-      active.clear();
-      if (frame !== undefined) cancelFrame(frame);
-      frame = undefined;
-    },
+    cancelAll,
     get activeCount() { return active.size; },
     dispose() {
       if (disposed) return;

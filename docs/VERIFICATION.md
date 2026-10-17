@@ -19,6 +19,15 @@ checks reject missing local links.
 `node examples/headless.mjs` exercises the built package's headless entry point.
 Generated test output goes under ignored `.artifacts/test-dist/`.
 
+The Corpus position-motion regression can run without a renderer or build:
+`node --test tests/browser/node-position-motion.test.mjs tests/browser/node-spawn-motion.test.mjs tests/browser/corpus-navigation.test.mjs`.
+It checks immediate reduced-motion settling, cancelled frame callbacks, the
+actual motion toggle and selection breathing, and existing scale/navigation behavior. These controlled
+scheduler tests do not establish visual quality. Verify a mid-build switch to
+reduced motion in a real browser before claiming that example qualified.
+The example uses demand rendering; measure graph draw calls separately from
+Three's internal clock, which can continue requesting frames while visible.
+
 For presentation changes, start `pnpm run showcase` and use an actual local
 browser. Record browser version, viewport, renderer backend, selected route,
 and synthetic fixture. Check startup, loading/failure messages, empty states,
