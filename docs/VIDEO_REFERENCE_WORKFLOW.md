@@ -264,9 +264,17 @@ upload names, machine-specific paths, and logs that expose them. Commit only
 reviewed synthetic implementation captures needed by the example. Keep evidence
 retention separate from runtime assets and from npm release approval.
 
+For the focused search-scan replay in a fresh checkout, install the locked pnpm
+dependencies, run the package build, then run [the timeline fixture](../tests/browser/search-scan.test.mjs)
+and [the playback fixture](../tests/browser/search-scan-playback.test.mjs) with
+node --test. The playback fixture imports dist/index.js. Browser captures and
+the private source video remain separate evidence.
+
 Run the relevant tests and `pnpm run check` after changes. Follow
 [CONTRIBUTING.md](../CONTRIBUTING.md) for candidate verification and publication
 boundaries. The repeatable completion record is: identified source and coverage,
 timestamped observations, bounded temporal contract, implementation, mechanical
 results, browser/backend evidence, remaining differences, and the published
 source identity.
+
+AI-edited: 2026-11-14T11:14:04-05:00 | agent=Codex/root | task=clone-jutsu-study | change=record an evidence-backed reference workflow and replay
